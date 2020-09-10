@@ -3,6 +3,8 @@ package Chat.ChatClient;
 import Chat.Messages.Message;
 
 import java.util.concurrent.PriorityBlockingQueue;
+import java.net.Socket;
+
 
 /**
  * this is a very simple class it is essentialy a message router
@@ -29,10 +31,10 @@ public class ChatClient implements Runnable{
 
     /**
      * the constructor of the ChatClient. It will initialize everything and then loop
-     * @param username
-     * @param serverHostName
-     * @param serverPort
-     * @param interfaceMessageQ
+     * @param username client username
+     * @param serverHostName server hostname
+     * @param serverPort server port number
+     * @param interfaceMessageQ message queue for client interface
      */
     public ChatClient(String username, String serverHostName, int serverPort, PriorityBlockingQueue<Message> interfaceMessageQ){
         //TODO initialize everything here. add any  more parameters as
@@ -41,6 +43,7 @@ public class ChatClient implements Runnable{
         this.serverHostName = serverHostName;
         this.serverPort = serverPort;
         this.interfaceMessageQ = interfaceMessageQ;
+        connectToServer(this.serverHostName, this.serverPort);
         new Thread(this).start();
     }
     /**
@@ -66,5 +69,21 @@ public class ChatClient implements Runnable{
     private void shutdown(){
         //TODO this gets called when a Shutdown message is received it will gracefully close all
         // connections and the break out of run loop
+    }
+
+    /**
+     * Connect to the server with the specifed hostname and port number
+     * @param serverHostName server host name
+     * @param serverPort server port number
+     */
+    private void connectToServer(String serverHostName, int serverPort) {
+        try {
+            Socket socket = new Socket(serverHostName, serverPort);
+            this.messageQ = new PriorityBlockingQueue<Message>();
+            serverConnection = new ServerConnection(socket, messageQ);
+        }
+        catch (Exception e) {
+            System.err.println(e);
+        }
     }
 }
