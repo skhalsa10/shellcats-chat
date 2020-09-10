@@ -31,12 +31,17 @@ public class ChatClient implements Runnable{
      * the constructor of the ChatClient. It will initialize everything and then loop
      * @param username
      * @param serverHostName
-     * @param serverport
+     * @param serverPort
      * @param interfaceMessageQ
      */
-    public ChatClient(String username, String serverHostName, int serverport, PriorityBlockingQueue<Message> interfaceMessageQ){
+    public ChatClient(String username, String serverHostName, int serverPort, PriorityBlockingQueue<Message> interfaceMessageQ){
         //TODO initialize everything here. add any  more parameters as
         // needed. Build the server connection as well. finally start the thread.
+        this.username = username;
+        this.serverHostName = serverHostName;
+        this.serverPort = serverPort;
+        this.interfaceMessageQ = interfaceMessageQ;
+        new Thread(this).start();
     }
     /**
      * this method gets run when the thread is started
