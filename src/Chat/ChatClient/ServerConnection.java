@@ -25,6 +25,12 @@ public class ServerConnection implements Runnable{
     private ObjectOutputStream out;
     private PriorityBlockingQueue<Message> clientMessageQ;
 
+    /**
+     * Constructs the ServerConnection
+     * @param socket socket used for connection
+     * @param clientMessageQ client message queue
+     * @throws IOException
+     */
     public ServerConnection(Socket socket, PriorityBlockingQueue<Message> clientMessageQ) throws IOException {
         this.socket = socket;
         this.clientMessageQ = clientMessageQ;
@@ -50,7 +56,12 @@ public class ServerConnection implements Runnable{
      * @param m message to send out the socket
      */
     public void sendMessage(Message m){
-        //TODO send the message out the stream :)
+        try {
+            out.writeObject(m);
+        }
+        catch(Exception e) {
+            System.err.println(e);
+        }
     }
 
     /**
