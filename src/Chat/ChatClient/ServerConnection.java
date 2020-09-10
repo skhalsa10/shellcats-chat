@@ -49,6 +49,24 @@ public class ServerConnection implements Runnable{
         // Make sure this is a Message type  before casting and output error if not Message type
 
         //TODO catch all errors that get thrown and handle appropriately.
+        Message recievedMessage;
+        while(true) {
+            try {
+                Object receivedObject = in.readObject();
+                if (receivedObject instanceof Message) {
+                    recievedMessage = (Message) receivedObject;
+                    clientMessageQ.put(recievedMessage);
+                }
+                else {
+                    //TODO make this into an error...forgot how to do that...
+                    System.out.println("not a Message!!!");
+                }
+
+            }
+            catch(Exception e) {
+                System.err.println(e);
+            }
+        }
     }
 
     /**
