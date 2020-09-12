@@ -120,7 +120,7 @@ public class ServerConnection implements Runnable{
         //TODO gracefully close input stream, output stream, and socket. then break out of the running loop.
         connected = false;
         try {
-            out.close();
+            closeConnection();
         }
         catch(IOException e) {
             System.out.println("Connection to Chat Sever closed");
