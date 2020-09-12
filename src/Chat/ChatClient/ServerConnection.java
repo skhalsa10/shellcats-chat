@@ -88,6 +88,14 @@ public class ServerConnection implements Runnable{
     }
 
     /**
+     * Checks if server connection exists
+     * @return true or false
+     */
+    public boolean isConnected() {
+        return connected;
+    }
+
+    /**
      * Close the output stream, input stream and socket.
      * @throws IOException
      */
