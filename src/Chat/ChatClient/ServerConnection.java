@@ -24,6 +24,7 @@ public class ServerConnection implements Runnable{
     //the output stream is all the data going to the server
     private ObjectOutputStream out;
     private PriorityBlockingQueue<Message> clientMessageQ;
+    private boolean connected = false;
 
     /**
      * Constructs the ServerConnection
@@ -36,6 +37,7 @@ public class ServerConnection implements Runnable{
         this.clientMessageQ = clientMessageQ;
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
+        connected = true;
     }
     /**
      * this function is what runs runnable thread is started.
@@ -49,19 +51,22 @@ public class ServerConnection implements Runnable{
         // Make sure this is a Message type  before casting and output error if not Message type
 
         //TODO catch all errors that get thrown and handle appropriately.
-        Message recievedMessage;
-        while(true) {
+        Message receivedMessage;
+        while(connected) {
             try {
                 Object receivedObject = in.readObject();
                 if (receivedObject instanceof Message) {
-                    recievedMessage = (Message) receivedObject;
-                    clientMessageQ.put(recievedMessage);
+                    receivedMessage = (Message) receivedObject;
+                    clientMessageQ.put(receivedMessage);
                 }
                 else {
                     //TODO make this into an error...forgot how to do that...
                     System.out.println("not a Message!!!");
                 }
 
+            }
+            catch(IOException e) {
+                System.out.println("Chat Server connection is closed");
             }
             catch(Exception e) {
                 System.err.println(e);
@@ -83,9 +88,34 @@ public class ServerConnection implements Runnable{
     }
 
     /**
+     * Close the output stream, input stream and socket.
+     * @throws IOException
+     */
+    public void closeConnection() throws IOException {
+        try {
+            out.close();
+        }
+        finally {
+            try {
+                in.close();
+            }
+            finally {
+                socket.close();
+            }
+        }
+    }
+
+    /**
      * this method will gracefully shutdown everything
      */
     public void shutdown(){
         //TODO gracefully close input stream, output stream, and socket. then break out of the running loop.
+        connected = false;
+        try {
+            out.close();
+        }
+        catch(IOException e) {
+            System.out.println("Connection to Chat Sever closed");
+        }
     }
 }
