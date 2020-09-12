@@ -1,6 +1,6 @@
 package Chat.ChatClient;
 
-import Chat.Messages.Message;
+import Chat.Messages.*;
 
 import java.util.concurrent.PriorityBlockingQueue;
 import java.net.Socket;
@@ -56,6 +56,54 @@ public class ChatClient implements Runnable{
         //TODO loop over the messageQ and process it. make sure to forward
         // incoming messages to the interfaceMessageQ if it needs to be
         // displayed. If it is an outgoing message send it out the serverConnection
+        if (serverConnection.isConnected()) {
+            isRunning = true;
+            while(isRunning) {
+                takeMessage();
+            }
+        }
+    }
+
+    /**
+     * Takes messages from messageQ and processes them
+     */
+    private void takeMessage() {
+        Message receivedMessage;
+        try {
+            receivedMessage = messageQ.take();
+            processMessage(receivedMessage);
+        }
+        catch(Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    /**
+     * Processes message by its type
+     * Send message to the correct message queue
+     * @param m message
+     */
+    private void processMessage(Message m) {
+        if(m instanceof MShutDown) {
+            shutdown((MShutDown) m);
+        }
+        else if(m instanceof MChat) {
+            forwardMessage((MChat) m);
+        }
+    }
+
+    /**
+     * Forward message to either interface or server
+     * @param m message to be sent
+     */
+    private void forwardMessage(MChat m) {
+        String recipient = m.getRecipientUsername();
+        if(recipient.equalsIgnoreCase(username)) {
+            interfaceMessageQ.put(m);
+        }
+        else {
+            serverConnection.sendMessage(m);
+        }
     }
 
     /**
@@ -66,13 +114,22 @@ public class ChatClient implements Runnable{
         //TODO just drop this message into the messageQ and it will get processed when ready.
     }
 
-    private void shutdown(){
+    /**
+     * ShutDown message received
+     * Notify server that client is shutting down and shut down client and close all connections
+     * @param m shutdown message
+     */
+    private void shutdown(MShutDown m){
         //TODO this gets called when a Shutdown message is received it will gracefully close all
         // connections and the break out of run loop
+        isRunning = false;
+        serverConnection.sendMessage(m);
+        serverConnection.shutdown();
     }
 
+
     /**
-     * Connect to the server with the specifed hostname and port number
+     * Connect to the server with the specified hostname and port number
      * @param serverHostName server host name
      * @param serverPort server port number
      */
