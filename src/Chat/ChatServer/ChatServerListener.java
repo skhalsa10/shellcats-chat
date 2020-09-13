@@ -48,5 +48,14 @@ public class ChatServerListener implements Runnable {
     public void shutdown()
     {
         //TODO close all sockets and shutdown the thread gracefully
+
+        System.out.println("Connection to chat server is shut down");
+        try {
+            serverSocket.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
