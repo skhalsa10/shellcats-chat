@@ -1,6 +1,6 @@
 package Chat.ChatServer;
 
-import Chat.Messages.Message;
+import Chat.Messages.*;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,7 +19,7 @@ import java.io.EOFException;
  * @version 1
  */
 public class ClientConnection implements Runnable{
-    private String username;
+    private String username="Unkown";
 
     private Socket socket;
     //the input stream is all data coming to the client from the server
@@ -28,18 +28,18 @@ public class ClientConnection implements Runnable{
     private ObjectOutputStream out;
     //the server messageq
     private PriorityBlockingQueue<Message> serverMessageQ;
-    private ConcurrentHashMap<String,ClientConnection> clients;
+   // private ConcurrentHashMap<String,ClientConnection> clients;
     private boolean serverConnected=false;
 
 
-    public ClientConnection(Socket socket, PriorityBlockingQueue<Message> serverMessageQ, ConcurrentHashMap<String,ClientConnection> clients)throws IOException {
+    public ClientConnection(Socket socket, PriorityBlockingQueue<Message> serverMessageQ)throws IOException {
         //TODO initialize everything. the username will not be immediately known so set it to null or something.
         this.socket=socket;
         this.serverMessageQ=serverMessageQ;
-        this.clients=clients;
+        //this.clients=clients;
         //this.username=username;
-        out = new ObjectOutputStream(socket.getOutputStream()); // Bank to client
-        in = new ObjectInputStream(socket.getInputStream()); // From client to bank
+        out = new ObjectOutputStream(socket.getOutputStream()); // Server to client
+        in = new ObjectInputStream(socket.getInputStream()); // From client to server
         serverConnected=true;
 
     }
@@ -62,7 +62,11 @@ public class ClientConnection implements Runnable{
                 if (receivedObject instanceof Message) {
                     //Add message to server's serverMessageQ
                     receivedMessage = (Message) receivedObject;
+                    if (receivedMessage instanceof ClientUserName) {
+                     this.setUsername(((ClientUserName) receivedMessage).getUserName());
+                    }
                     serverMessageQ.put((receivedMessage));
+
                 }
                 else
                 { System.out.println("It's not a valid message");
