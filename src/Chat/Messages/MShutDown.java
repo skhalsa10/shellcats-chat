@@ -7,6 +7,7 @@ public class MShutDown extends Message{
     private final String username;
 
     public MShutDown(String username) {
+        super();
         this.username = username;
     }
 

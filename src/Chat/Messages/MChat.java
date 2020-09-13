@@ -9,6 +9,7 @@ public class MChat extends Message {
     private final String chatMessage;
 
     public MChat(String senderUsername, String recipientUsername, String chatMessage) {
+        super();
         this.senderUsername = senderUsername;
         this.recipientUsername = recipientUsername;
         this.chatMessage = chatMessage;
