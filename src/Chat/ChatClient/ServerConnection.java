@@ -81,6 +81,7 @@ public class ServerConnection implements Runnable{
     public void sendMessage(Message m){
         try {
             out.writeObject(m);
+            System.out.println("message sent through serverConnection");
         }
         catch(Exception e) {
             System.err.println(e);
