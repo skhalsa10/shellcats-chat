@@ -90,6 +90,18 @@ public class ChatClient implements Runnable{
         else if(m instanceof MChat) {
             forwardMessage((MChat) m);
         }
+        else if (m instanceof requestUsername) {
+            sendUsername();
+            System.out.println("requestUsername message received");
+        }
+    }
+
+    /**
+     * Send username to server
+     */
+    private void sendUsername() {
+        ClientUserName m = new ClientUserName(username);
+        serverConnection.sendMessage(m);
     }
 
     /**
