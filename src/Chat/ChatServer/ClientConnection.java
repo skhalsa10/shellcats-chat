@@ -54,33 +54,30 @@ public class ClientConnection implements Runnable{
 
     @Override
     public void run() {
-        //TODO loop and wait on input stream  and place it into the serverMessageQ
         Message receivedMessage;
-        try {
-            Object receivedObject = in.readObject();
-            while(receivedObject != null && serverConnected) {
-                if (receivedObject instanceof Message) {
-                    //Add message to server's serverMessageQ
+        while(serverConnected) {
+            try {
+                Object receivedObject = in.readObject();
+                if(receivedObject instanceof Message) {
                     receivedMessage = (Message) receivedObject;
                     if (receivedMessage instanceof ClientUserName) {
-                     this.setUsername(((ClientUserName) receivedMessage).getUserName());
+                        this.setUsername(((ClientUserName) receivedMessage).getUserName());
+                        System.out.println(((ClientUserName) receivedMessage).getUserName());
                     }
                     serverMessageQ.put((receivedMessage));
+                }
+                else {
+                    System.out.println("It's not a valid message");
+                }
+            }
+            catch(IOException e) {
+                System.err.println(e);
+            }
+            catch(Exception e) {
+                System.err.println(e);
+            }
 
-                }
-                else
-                { System.out.println("It's not a valid message");
-                }
-            }
-            }
-            catch(IOException  e)
-            {
-            System.out.println("A client disconnected and the socket closed.");
-            } catch (ClassNotFoundException ex){
-            ex.printStackTrace();
         }
-
-
     }
 
     public void sendMessage(Message m){
