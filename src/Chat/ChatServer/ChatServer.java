@@ -1,6 +1,7 @@
 package Chat.ChatServer;
 
 import Chat.Messages.ClientUserName;
+import Chat.Messages.MShutDown;
 import Chat.Messages.Message;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * This class is a simple server class it brokers clients connections  and then forwards messages to them
@@ -16,7 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ChatServer implements Runnable {
     private ServerSocket serverSocket;
     private ConcurrentHashMap<String,ClientConnection> clients;
-    private LinkedBlockingQueue<Message> serverMessageQ;
+    private PriorityBlockingQueue<Message> serverMessageQ;
     private String serverHostname;
     private int serverport;
     private ChatServerListener chatServerListener;
@@ -26,7 +28,7 @@ public class ChatServer implements Runnable {
         //TODO initialize everything. start the chatserver listener, and then start the chatserver thread.
         this.serverHostname=serverHostname;
         this.serverport = serverport;
-        this.serverMessageQ=new LinkedBlockingQueue<>();
+        this.serverMessageQ = new PriorityBlockingQueue<>();
         this.clients=new ConcurrentHashMap<>();
         try {
             this.serverSocket=new ServerSocket(serverport);
@@ -34,7 +36,7 @@ public class ChatServer implements Runnable {
         } catch (IOException e) {
             System.out.println("Server can't listen on the specified port");
         }
-        this.chatServerListener= new ChatServerListener(serverSocket,clients);
+        this.chatServerListener= new ChatServerListener(serverSocket,clients, serverMessageQ);
         Thread thread = new Thread(chatServerListener); //start server listener thread
         thread.start();
         Thread thread2 = new Thread(this); //start chat server thread
@@ -50,6 +52,7 @@ public class ChatServer implements Runnable {
         {
             try {
                 Message msg = serverMessageQ.take();
+                System.out.println(msg);
                 if (msg instanceof ClientUserName)
                 {
                     ClientUserName clientMsg=(ClientUserName)msg;
@@ -63,6 +66,9 @@ public class ChatServer implements Runnable {
                         break;
                     }
                     }
+//                    MShutDown m = new MShutDown(clientMsg.getUserName());
+//                    ClientConnection cc = clients.get(clientMsg.getUserName());
+//                    cc.sendMessage(m);
                 }
 
 

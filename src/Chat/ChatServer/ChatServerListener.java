@@ -22,14 +22,15 @@ public class ChatServerListener implements Runnable {
     //not sure if this will work but maybe keep a counter that gets incremented after every new connection the
     //username can be "notregistered1" the chat server will update the map when it learns the username.
     private ConcurrentHashMap<String,ClientConnection> clients;
-    PriorityBlockingQueue<Message> serverMessageQ = new PriorityBlockingQueue<>();
+    PriorityBlockingQueue<Message> serverMessageQ;
     private long counter;
 
 
-    public ChatServerListener(ServerSocket serverSocket, ConcurrentHashMap<String,ClientConnection> clients){
+    public ChatServerListener(ServerSocket serverSocket, ConcurrentHashMap<String,ClientConnection> clients, PriorityBlockingQueue<Message> serverMessageQ){
         //TODO initialize anything and start the thread.
         this.clients=clients;
         this.serverSocket=serverSocket;
+        this.serverMessageQ = serverMessageQ;
         counter=0;
 
     }
