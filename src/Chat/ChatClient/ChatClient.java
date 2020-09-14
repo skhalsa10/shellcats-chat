@@ -138,9 +138,18 @@ public class ChatClient implements Runnable{
             Socket socket = new Socket(serverHostName, serverPort);
             this.messageQ = new PriorityBlockingQueue<Message>();
             serverConnection = new ServerConnection(socket, messageQ);
+            new Thread(serverConnection).start();
         }
         catch (Exception e) {
             System.err.println(e);
         }
+    }
+
+    public static void main(String[] args) {
+        if (args.length != 3) {
+            System.out.println("Wrong number of parameters");
+        }
+        PriorityBlockingQueue q = new PriorityBlockingQueue<Message>();
+        ChatClient client = new ChatClient(args[2], args[0], Integer.parseInt(args[1]), q);
     }
 }
