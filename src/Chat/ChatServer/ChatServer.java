@@ -1,8 +1,6 @@
 package Chat.ChatServer;
 
-import Chat.Messages.ClientUserName;
-import Chat.Messages.MShutDown;
-import Chat.Messages.Message;
+import Chat.Messages.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -58,17 +56,40 @@ public class ChatServer implements Runnable {
                     ClientUserName clientMsg=(ClientUserName)msg;
                     for (String key:clients.keySet())
                     {
-                    if (clients.get(key).getUsername().equals(clientMsg.getUserName()))
-                    {
-                        ClientConnection clientConnection=clients.get(key); // Temporary store connection
-                        clients.put(clientMsg.getUserName(),clientConnection);// Re added to map with correct key
-                        clients.remove(key);  //Remove the old entry
-                        break;
+                        if (clients.get(key).getUsername().equals(clientMsg.getUserName()))
+                        {
+                            ClientConnection clientConnection=clients.get(key); // Temporary store connection
+                            clients.put(clientMsg.getUserName(),clientConnection);// Re added to map with correct key
+                            clients.remove(key);  //Remove the old entry
+                            break;
+                        }
                     }
+                    MShutDown m = new MShutDown(clientMsg.getUserName());
+                    ClientConnection cc = clients.get(clientMsg.getUserName());
+                    cc.sendMessage(m);
+                }
+                else if (msg instanceof MChat) {
+                    String recipient = ((MChat) msg).getRecipientUsername();
+                    if (clients.containsKey(recipient)) {
+                        ClientConnection clientConnection = clients.get(recipient);
+                        clientConnection.sendMessage(msg);
                     }
-//                    MShutDown m = new MShutDown(clientMsg.getUserName());
-//                    ClientConnection cc = clients.get(clientMsg.getUserName());
-//                    cc.sendMessage(m);
+                    else {
+                        String sender = ((MChat) msg).getSenderUsername();
+                        MUnavailable m = new MUnavailable(sender, recipient);
+                        ClientConnection clientConnection = clients.get(sender);
+                        clientConnection.sendMessage(m);
+                    }
+                }
+                else if (msg instanceof MShutDown) {
+                    String sender = ((MShutDown) msg).getUsername();
+                    ClientConnection clientConnection = clients.get(sender);
+                    try {
+                        clientConnection.shutdown();
+                    }
+                    catch(IOException e) {
+                        System.out.println("Connection to " + sender + "is closed");
+                    }
                 }
 
 
