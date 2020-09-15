@@ -80,6 +80,9 @@ public class ClientConnection implements Runnable{
                         }
 
                     }
+                    else if(receivedMessage instanceof MChat) {
+                        serverMessageQ.put((receivedMessage));
+                    }
 
                 }
                 else {
