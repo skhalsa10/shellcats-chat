@@ -1,13 +1,11 @@
 package Chat.ChatServer;
 
 import Chat.Messages.*;
-import javafx.scene.layout.Priority;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 // This is Soheila
@@ -24,6 +22,7 @@ public class ChatServerListener implements Runnable {
     private ConcurrentHashMap<String,ClientConnection> clients;
     PriorityBlockingQueue<Message> serverMessageQ;
     private long counter;
+    private boolean isRunning;
 
 
     public ChatServerListener(ServerSocket serverSocket, ConcurrentHashMap<String,ClientConnection> clients, PriorityBlockingQueue<Message> serverMessageQ){
@@ -33,18 +32,23 @@ public class ChatServerListener implements Runnable {
         this.serverMessageQ = serverMessageQ;
         counter=0;
 
+
     }
     @Override
     public void run() {
+        isRunning = true;
+        while(isRunning)
         try {
             Socket clientSocket = serverSocket.accept();
-            ClientConnection clientConnection = new ClientConnection(clientSocket, serverMessageQ);
+            System.out.println("accepting new socket on chat server");
+            ClientConnection clientConnection = new ClientConnection("Null"+Long.toString(counter),clientSocket, serverMessageQ);
+            System.out.println("serverlistener created new clientconenction");
             clients.put("Null"+Long.toString(counter),clientConnection);
             counter++;
             Thread thread = new Thread(clientConnection);
             thread.start();
             System.out.println("Client connected!");
-            requestUsername usernameMsg=new requestUsername();
+            RequestUsername usernameMsg=new RequestUsername();
             clientConnection.sendMessage(usernameMsg);
 
         } catch (IOException e) {

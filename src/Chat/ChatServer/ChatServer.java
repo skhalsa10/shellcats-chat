@@ -56,6 +56,7 @@ public class ChatServer implements Runnable {
                     ClientUserName clientMsg=(ClientUserName)msg;
                     for (String key:clients.keySet())
                     {
+                        System.out.println("THE KEY is " + key);
                         if (clients.get(key).getUsername().equals(clientMsg.getUserName()))
                         {
                             ClientConnection clientConnection=clients.get(key); // Temporary store connection
@@ -96,7 +97,9 @@ public class ChatServer implements Runnable {
 
         }
         catch (Exception e)
-        { System.err.println(e);
+        {
+            System.out.println("catching error in processing messages in ChatServer Run");
+            System.err.println(e);
         }
 
         }
@@ -108,16 +111,19 @@ public class ChatServer implements Runnable {
     public void shutdown()
     {
         //TODO close all sockets and shutdown the thread gracefully
-        System.out.println("Connection to chat server is shut down");
+        System.out.println("Processing shutdown ");
         try {
+            System.out.println("shutting down remaining clients");
             for (ClientConnection clientConnection: clients.values()) {
                clientConnection.shutdown();
             }
         }
         catch (IOException e) {
+            System.out.println("cought error in chatserver shutdown");
             e.printStackTrace();
         }
         finally {
+            System.out.println("shutting down the chat server listener");
             chatServerListener.shutdown();
             try {
                 serverSocket.close();

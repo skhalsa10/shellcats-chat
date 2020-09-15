@@ -32,12 +32,12 @@ public class ClientConnection implements Runnable{
     private boolean serverConnected=false;
 
 
-    public ClientConnection(Socket socket, PriorityBlockingQueue<Message> serverMessageQ)throws IOException {
+    public ClientConnection(String username,Socket socket, PriorityBlockingQueue<Message> serverMessageQ)throws IOException {
         //TODO initialize everything. the username will not be immediately known so set it to null or something.
         this.socket=socket;
         this.serverMessageQ=serverMessageQ;
         //this.clients=clients;
-        //this.username=username;
+        this.username=username;
         out = new ObjectOutputStream(socket.getOutputStream()); // Server to client
         in = new ObjectInputStream(socket.getInputStream()); // From client to server
         serverConnected=true;
@@ -54,6 +54,7 @@ public class ClientConnection implements Runnable{
 
     @Override
     public void run() {
+        System.out.println("clientconnection " + username + " running");
         Message receivedMessage;
         while(serverConnected) {
             try {
@@ -71,10 +72,14 @@ public class ClientConnection implements Runnable{
                 }
             }
             catch(IOException e) {
+                System.out.println("woeh woeh woeh there hold your horses and check client connection run");
                 System.err.println(e);
+                serverConnected = false;
             }
             catch(Exception e) {
+
                 System.err.println(e);
+                serverConnected = false;
             }
 
         }
@@ -86,6 +91,7 @@ public class ClientConnection implements Runnable{
             out.writeObject(m);
         }
         catch(Exception e) {
+            System.out.println("error sending message out " + username);
             System.err.println(e);
         }
 
