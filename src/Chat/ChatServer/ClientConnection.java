@@ -64,8 +64,23 @@ public class ClientConnection implements Runnable{
                     if (receivedMessage instanceof ClientUserName) {
                         this.setUsername(((ClientUserName) receivedMessage).getUserName());
                         System.out.println(((ClientUserName) receivedMessage).getUserName());
+                        serverMessageQ.put((receivedMessage));
                     }
-                    serverMessageQ.put((receivedMessage));
+                    else if(receivedMessage instanceof MShutDown){
+                        try{
+                            out.close();
+                            in.close();
+                            socket.close();
+                        }
+                        finally{
+                            //force the thread to stop running
+                            serverConnected = false;
+                            //place message into  chat server to remove from list of clients.
+                            serverMessageQ.put((receivedMessage));
+                        }
+
+                    }
+
                 }
                 else {
                     System.out.println("It's not a valid message");
@@ -85,12 +100,19 @@ public class ClientConnection implements Runnable{
         }
     }
 
+    /**
+     * public interface to send a message to this client
+     * @param m Message to send
+     */
     public void sendMessage(Message m){
-        //TODO send this message out the out pipe
+
         try {
             out.writeObject(m);
         }
         catch(Exception e) {
+
+            //TODO it may be possible that a the socket has closed and we cannot write an object.
+            // in this case send a message to the server saying current message failed.
             System.out.println("error sending message out " + username);
             System.err.println(e);
         }
@@ -98,27 +120,15 @@ public class ClientConnection implements Runnable{
     }
 
     public void shutdown() throws IOException {
-        //TODO send a shutdown message down the out pipe and gracefully close
-        // all streams, the socket, and break out of the thread loop
-        out.writeObject("Connection to chat server is shut down");
+        //todo the server may initiate a shutdown and
         //System.out.println("Connection to chat server is shut down");
         try {
             out.close();
+            in.close();
+            socket.close();
         }
         finally {
-            try {
-                in.close();
-            }
-            finally {
-                try{
-                    socket.close();
-                }
-                finally {
-                    serverConnected=false;
-                }
-
-
-            }
+            serverConnected=false;
         }
 
 

@@ -23,7 +23,6 @@ public class ChatServer implements Runnable {
     private boolean connected=false;
 
     public ChatServer(String serverHostname, int serverport){
-        //TODO initialize everything. start the chatserver listener, and then start the chatserver thread.
         this.serverHostname=serverHostname;
         this.serverport = serverport;
         this.serverMessageQ = new PriorityBlockingQueue<>();
@@ -43,8 +42,7 @@ public class ChatServer implements Runnable {
 
     @Override
     public void run() {
-        //TODO loop and wait on the serverMessageQ. respond to the messages accordingly.
-        // update and maintain the clients map when applicable.
+
         System.out.println("Server is running");
         while (connected)
         {
@@ -84,13 +82,10 @@ public class ChatServer implements Runnable {
                 }
                 else if (msg instanceof MShutDown) {
                     String sender = ((MShutDown) msg).getUsername();
-                    ClientConnection clientConnection = clients.get(sender);
-                    try {
-                        clientConnection.shutdown();
-                    }
-                    catch(IOException e) {
-                        System.out.println("Connection to " + sender + "is closed");
-                    }
+                    //the client receives MShutDown message and gracefully shuts down at that
+                    // point so no need to tell it to shut down but we need to update our list of clients
+                    clients.remove(sender);
+
                 }
 
 
