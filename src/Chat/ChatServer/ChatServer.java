@@ -51,21 +51,14 @@ public class ChatServer implements Runnable {
                 System.out.println(msg);
                 if (msg instanceof ClientUserName)
                 {
-                    ClientUserName clientMsg=(ClientUserName)msg;
-                    for (String key:clients.keySet())
-                    {
-                        System.out.println("THE KEY is " + key);
-                        if (clients.get(key).getUsername().equals(clientMsg.getUserName()))
-                        {
-                            ClientConnection clientConnection=clients.get(key); // Temporary store connection
-                            clients.put(clientMsg.getUserName(),clientConnection);// Re added to map with correct key
-                            clients.remove(key);  //Remove the old entry
-                            break;
-                        }
+                    ClientUserName clientMsg = (ClientUserName) msg;
+                    //remove clientconenction with wrong key and store it temporarily
+                    ClientConnection clientConnection = clients.remove(clientMsg.getTempUserName());
+                    if (clientConnection == null) {
+                        System.out.println("ERROR in chatserver");
                     }
-                    MShutDown m = new MShutDown(clientMsg.getUserName());
-                    ClientConnection cc = clients.get(clientMsg.getUserName());
-                    cc.sendMessage(m);
+                    //place it into the clients with correct key
+                    clients.put(clientMsg.getUserName(), clientConnection);
                 }
                 else if (msg instanceof MChat) {
                     String recipient = ((MChat) msg).getRecipientUsername();
@@ -86,6 +79,19 @@ public class ChatServer implements Runnable {
                     // point so no need to tell it to shut down but we need to update our list of clients
                     clients.remove(sender);
 
+                }
+                else if(msg instanceof MFailedMessage){
+                    MFailedMessage m2 = (MFailedMessage) msg;
+                    if (m2.getFailedMessage() instanceof MChat){
+                        String sender = ((MChat)m2.getFailedMessage()).getSenderUsername();
+                        MUnavailable m = new MUnavailable(sender, m2.getOriginalDestination());
+                        ClientConnection clientConnection = clients.get(sender);
+                        clientConnection.sendMessage(m);
+                    }
+                    System.out.println("Message Failed to send to " + m2.getOriginalDestination());
+                }
+                else{
+                    System.out.println("message failed to process. " + msg);
                 }
 
 
