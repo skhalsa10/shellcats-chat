@@ -52,13 +52,23 @@ public class ChatServer implements Runnable {
                 if (msg instanceof ClientUserName)
                 {
                     ClientUserName clientMsg = (ClientUserName) msg;
-                    //remove clientconenction with wrong key and store it temporarily
-                    ClientConnection clientConnection = clients.remove(clientMsg.getTempUserName());
-                    if (clientConnection == null) {
-                        System.out.println("ERROR in chatserver");
+                    if(clients.containsKey(clientMsg.getUserName())) {
+                       String clientName = clientMsg.getTempUserName();
+                       ClientConnection clientConnection = clients.get(clientName);
+                       MUsernameExists m = new MUsernameExists(clientMsg.getUserName());
+                       clientConnection.sendMessage(m);
                     }
-                    //place it into the clients with correct key
-                    clients.put(clientMsg.getUserName(), clientConnection);
+                    else {
+                        //remove clientconenction with wrong key and store it temporarily
+                        ClientConnection clientConnection = clients.remove(clientMsg.getTempUserName());
+                        if (clientConnection == null) {
+                            System.out.println("ERROR in chatserver");
+                        }
+                        //place it into the clients with correct key
+                        clients.put(clientMsg.getUserName(), clientConnection);
+                        System.out.print(clients.keySet());
+                    }
+
                 }
                 else if (msg instanceof MChat) {
                     String recipient = ((MChat) msg).getRecipientUsername();
