@@ -83,6 +83,7 @@ public class ChatServer implements Runnable {
                 else if(msg instanceof MFailedMessage){
                     MFailedMessage m2 = (MFailedMessage) msg;
                     if (m2.getFailedMessage() instanceof MChat){
+                        //todo remove recipient client connection from clients
                         String sender = ((MChat)m2.getFailedMessage()).getSenderUsername();
                         MUnavailable m = new MUnavailable(sender, m2.getOriginalDestination());
                         ClientConnection clientConnection = clients.get(sender);
