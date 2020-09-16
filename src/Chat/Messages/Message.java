@@ -1,5 +1,6 @@
 package Chat.Messages;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /***
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
  * I have added a timestamp. that will be added to all messages.
  * We can add other guarantees to this abstract class if we determine another one.
  */
-public abstract class Message implements Comparable<Message>  {
+public abstract class Message implements Comparable<Message> , Serializable {
     protected LocalDateTime timeStamp;
 
     public Message(){

@@ -6,14 +6,14 @@ import javafx.animation.AnimationTimer;
 import javafx.stage.Stage;
 
 import java.util.concurrent.PriorityBlockingQueue;
-//hi
+
 /**
  * This will be the Javafx Graphical User Interface.
  * it will have a box that displays messages and it
  * will scroll with the oldest at the top and newest at the bottom.
  * there will be a text box to type into and a send button to send the message.
  *
- * @author put name here
+ * @author Lawrence Leung
  * @author siri created the skeleton
  *
  * @version 1.0
@@ -22,7 +22,7 @@ public class ChatClientGUI extends AnimationTimer
 {
     //will need to sendMessage to chat client when
     // we want to send an outgoing message to the server
-    private ChatClient chatClient;
+    private ChatClient chatClient; //global chat client
     private long lastUpdate = 0;
     private PriorityBlockingQueue<Message> interfaceMessageQ;
     private Stage stage;
@@ -31,6 +31,10 @@ public class ChatClientGUI extends AnimationTimer
     public ChatClientGUI(PriorityBlockingQueue<Message>interfaceMessageQ, Stage primaryStage, ChatClient chatClient){
         //TODO be prepared to have a giant constructor. this is typically unusual but for the gui you
         // are building everycomponant in the constructor and piecing it togethor. have fun :)
+
+        this.chatClient = chatClient; //assigns chatClient to be the global one
+        this.interfaceMessageQ = interfaceMessageQ;
+        this.stage = primaryStage;
     }
 
     //when possible use a percentage for widths of the screensize you are working on.
