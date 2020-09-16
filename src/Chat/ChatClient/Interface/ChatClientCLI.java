@@ -18,13 +18,20 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class ChatClientCLI implements Runnable{
     private PriorityBlockingQueue<Message> interfaceMessageQ;
     private ChatClient chatCLient;
+    private String username;
+
+
+    public ChatClientCLI(String username, String serverHostName, int serverPort){
+        this.username = username;
+        interfaceMessageQ = new PriorityBlockingQueue<>();
+        this.chatCLient = new ChatClient(username,serverHostName,serverPort,interfaceMessageQ);
+        new Thread(this).start();
+    }
 
 
     @Override
     public void run() {
-        //TODO process messages in queue
-        //write it to standard out and
-        //forward to ChatClient if needed
+
     }
 
     /**
@@ -33,10 +40,20 @@ public class ChatClientCLI implements Runnable{
      */
     public static void main(String[] args){
 
+        if(args.length != 3){
+            PrintInstructions();
+        }
+
+
+
         //TODO initialize everything.
 
         //TODO loop waiting on standard in. place standard in string into a
         // message and drop into interfaceMessageQ to process later by run above.
         // This should work... but not confident...
+    }
+
+    private static void PrintInstructions() {
+
     }
 }
