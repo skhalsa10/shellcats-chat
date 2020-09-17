@@ -1,10 +1,7 @@
 package Chat.ChatClient.Interface;
 
 import Chat.ChatClient.ChatClient;
-import Chat.Messages.MChat;
-import Chat.Messages.MSetRecipient;
-import Chat.Messages.MShutDown;
-import Chat.Messages.Message;
+import Chat.Messages.*;
 
 import java.util.Scanner;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -16,7 +13,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  *
  * May be able to build in an automated research test using this.
  *
- * @author place name here
+ * @author Siri Khalsa
  * @author siri did the skeleton
  */
 public class ChatClientCLI implements Runnable{
@@ -74,8 +71,26 @@ public class ChatClientCLI implements Runnable{
                 if(m instanceof MSetRecipient){
                     this.recipient = ((MSetRecipient) m).getRecipient();
                     chatCLient.sendMessage(m);
+                    System.out.println(ANSI_GREEN + "PROCESSED COMMAND:setRecipient " + ANSI_RESET);
                 }else if(m instanceof MChat){
-
+                    MChat mChat = (MChat) m;
+                    if(mChat.getSenderUsername() == username){
+                        //print out messages being sent by this client
+                        System.out.println(ANSI_CYAN + mChat.getChatMessage() + ANSI_RESET);
+                        chatCLient.sendMessage(mChat);
+                    }else{
+                        //print out messages received
+                        System.out.println(ANSI_BLACK + ANSI_WHITE_BACKGROUND + mChat.getChatMessage() + ANSI_RESET);
+                    }
+                }
+                else if(m instanceof MShutDown){
+                    MShutDown m2 = (MShutDown)m;
+                    System.out.println(ANSI_RED + "PROCESSED COMMAND:logOff " + ANSI_RESET);
+                    isRunning = false;
+                    chatCLient.sendMessage(m2);
+                }
+                else if(m instanceof MUnavailable){
+                    System.out.println(ANSI_RED + "Recipient " + ((MUnavailable) m).getRecipient() + " is not available."+ ANSI_RESET);
                 }
                 else{
                     System.out.println("do not know how to process message inside of chatclientclie: " + m);
@@ -87,6 +102,7 @@ public class ChatClientCLI implements Runnable{
                 e.printStackTrace();
             }
         }
+        System.out.println("CLI is shutting down");
 
     }
 
@@ -127,7 +143,7 @@ public class ChatClientCLI implements Runnable{
             while(CLICommanderRunning){
                 String line = scanner.nextLine();
                 //TODO here we need to check the line has any commands COMMAND:setRecipient...
-                if(line.substring(0,7).equals("COMMAND")){
+                if((line.length()>7)&&line.substring(0,7).equals("COMMAND")){
                     String[] parsedCommand = line.split(" ");
                     //process commands
                     if(parsedCommand[0].equals("COMMAND:setRecipient")){
@@ -143,9 +159,12 @@ public class ChatClientCLI implements Runnable{
                 }
                 else{
                     MChat mchat = new MChat(username,recipient,line);
+                    interfaceMessageQ.put(mchat);
                 }
                 //if there is no command then create an MCHAT
             }
+
+            System.out.println("Leaving the Commander!");
 
         }
     }

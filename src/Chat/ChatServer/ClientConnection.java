@@ -77,6 +77,11 @@ public class ClientConnection implements Runnable{
                             serverMessageQ.put((receivedMessage));
                         }
 
+                    }else if(receivedMessage instanceof MChat){
+                        serverMessageQ.put(receivedMessage);
+                    }
+                    else{
+                        System.out.println("Client connection cant process " + receivedMessage);
                     }
 
                 }
@@ -110,11 +115,8 @@ public class ClientConnection implements Runnable{
         catch(Exception e) {
 
             System.out.println("error sending message out " + username);
-
-            System.err.println(e);
-        }
-        finally {
             serverMessageQ.put(new MFailedMessage(m,username));
+            System.err.println(e);
         }
 
     }
