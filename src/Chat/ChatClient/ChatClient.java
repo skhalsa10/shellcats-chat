@@ -97,6 +97,15 @@ public class ChatClient implements Runnable{
             sendUsername();
             System.out.println("RequestUsername message received");
         }
+        else if (m instanceof MUnavailable) {
+            String recipient = ((MUnavailable) m).getRecipient();
+            System.out.println(recipient + " is unavailable");
+            interfaceMessageQ.put(m);
+        }
+        else if(m instanceof MUsernameExists) {
+            System.out.println(((MUsernameExists) m).getMsg());
+            interfaceMessageQ.put(m);
+        }
     }
 
     /**
