@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
@@ -27,7 +28,14 @@ public class ClientLoginController {
         System.out.println("Clicked");
         try {
             this.stringPort = port.getText();
+            this.interfaceMessageQ = new PriorityBlockingQueue<>();
             client = new ChatClient(username.getText(),serverIP.getText(),Integer.parseInt(stringPort),interfaceMessageQ);
+            Stage stage;
+            stage = (Stage) serverIP.getScene().getWindow();
+            Parent root = FXMLLoader.load(getClass().getResource("chatRoom.fxml"));
+            stage.setScene(new Scene(root, 1000, 572));
+            stage.setResizable(false);
+            stage.show();
         }
         catch (NumberFormatException e ) {
             System.out.println("Arguments: String username, int Server, int Port number");
