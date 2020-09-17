@@ -1,4 +1,4 @@
-package Chat.ChatClient;
+package Chat.ChatClient.Interface;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;

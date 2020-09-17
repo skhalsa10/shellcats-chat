@@ -1,5 +1,6 @@
-package Chat.ChatClient;
+package Chat.ChatClient.Interface;
 
+import Chat.ChatClient.ChatClient;
 import Chat.Messages.Message;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
