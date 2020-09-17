@@ -99,6 +99,10 @@ public class ChatClient implements Runnable{
             System.out.println(recipient + " is unavailable");
             interfaceMessageQ.put(m);
         }
+        else if(m instanceof MUsernameExists) {
+            System.out.println(((MUsernameExists) m).getMsg());
+            interfaceMessageQ.put(m);
+        }
     }
 
     /**

@@ -5,10 +5,8 @@ import Chat.Messages.*;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.io.IOException;
-import java.io.EOFException;
 
 /**
  * This encapsulates a client connection on the server
@@ -19,7 +17,7 @@ import java.io.EOFException;
  * @version 1
  */
 public class ClientConnection implements Runnable{
-    private String username="Unkown";
+    private String username;
 
     private Socket socket;
     //the input stream is all data coming to the client from the server
@@ -28,12 +26,11 @@ public class ClientConnection implements Runnable{
     private ObjectOutputStream out;
     //the server messageq
     private PriorityBlockingQueue<Message> serverMessageQ;
-    // private ConcurrentHashMap<String,ClientConnection> clients;
+   // private ConcurrentHashMap<String,ClientConnection> clients;
     private boolean serverConnected=false;
 
 
     public ClientConnection(String username,Socket socket, PriorityBlockingQueue<Message> serverMessageQ)throws IOException {
-        //TODO initialize everything. the username will not be immediately known so set it to null or something.
         this.socket=socket;
         this.serverMessageQ=serverMessageQ;
         //this.clients=clients;
@@ -62,6 +59,7 @@ public class ClientConnection implements Runnable{
                 if(receivedObject instanceof Message) {
                     receivedMessage = (Message) receivedObject;
                     if (receivedMessage instanceof ClientUserName) {
+                        ((ClientUserName) receivedMessage).setTempUserName(this.username);
                         this.setUsername(((ClientUserName) receivedMessage).getUserName());
                         System.out.println(((ClientUserName) receivedMessage).getUserName());
                         serverMessageQ.put((receivedMessage));
@@ -114,10 +112,12 @@ public class ClientConnection implements Runnable{
         }
         catch(Exception e) {
 
-            //TODO it may be possible that a the socket has closed and we cannot write an object.
-            // in this case send a message to the server saying current message failed.
             System.out.println("error sending message out " + username);
+
             System.err.println(e);
+        }
+        finally {
+            serverMessageQ.put(new MFailedMessage(m,username));
         }
 
     }
@@ -133,8 +133,6 @@ public class ClientConnection implements Runnable{
         finally {
             serverConnected=false;
         }
-
-
 
     }
 }

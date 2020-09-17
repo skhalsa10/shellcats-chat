@@ -39,5 +39,3 @@ public class MChat extends Message {
         return senderUsername;
     }
 }
-
-

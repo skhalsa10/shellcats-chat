@@ -23,7 +23,6 @@ public class ChatServer implements Runnable {
     private boolean connected=false;
 
     public ChatServer(String serverHostname, int serverport){
-        //TODO initialize everything. start the chatserver listener, and then start the chatserver thread.
         this.serverHostname=serverHostname;
         this.serverport = serverport;
         this.serverMessageQ = new PriorityBlockingQueue<>();
@@ -43,8 +42,7 @@ public class ChatServer implements Runnable {
 
     @Override
     public void run() {
-        //TODO loop and wait on the serverMessageQ. respond to the messages accordingly.
-        // update and maintain the clients map when applicable.
+
         System.out.println("Server is running");
         while (connected)
         {
@@ -53,21 +51,24 @@ public class ChatServer implements Runnable {
                 System.out.println(msg);
                 if (msg instanceof ClientUserName)
                 {
-                    ClientUserName clientMsg=(ClientUserName)msg;
-                    for (String key:clients.keySet())
-                    {
-                        System.out.println("THE KEY is " + key);
-                        if (clients.get(key).getUsername().equals(clientMsg.getUserName()))
-                        {
-                            ClientConnection clientConnection=clients.get(key); // Temporary store connection
-                            clients.put(clientMsg.getUserName(),clientConnection);// Re added to map with correct key
-                            clients.remove(key);  //Remove the old entry
-                            break;
-                        }
+                    ClientUserName clientMsg = (ClientUserName) msg;
+                    if(clients.containsKey(clientMsg.getUserName())) {
+                       String clientName = clientMsg.getTempUserName();
+                       ClientConnection clientConnection = clients.get(clientName);
+                       MUsernameExists m = new MUsernameExists(clientMsg.getUserName());
+                       clientConnection.sendMessage(m);
                     }
-                    MShutDown m = new MShutDown(clientMsg.getUserName());
-                    ClientConnection cc = clients.get(clientMsg.getUserName());
-                    cc.sendMessage(m);
+                    else {
+                        //remove clientconenction with wrong key and store it temporarily
+                        ClientConnection clientConnection = clients.remove(clientMsg.getTempUserName());
+                        if (clientConnection == null) {
+                            System.out.println("ERROR in chatserver");
+                        }
+                        //place it into the clients with correct key
+                        clients.put(clientMsg.getUserName(), clientConnection);
+                        System.out.print(clients.keySet());
+                    }
+
                 }
                 else if (msg instanceof MChat) {
                     String recipient = ((MChat) msg).getRecipientUsername();
@@ -84,23 +85,34 @@ public class ChatServer implements Runnable {
                 }
                 else if (msg instanceof MShutDown) {
                     String sender = ((MShutDown) msg).getUsername();
-                    ClientConnection clientConnection = clients.get(sender);
-                    try {
-                        clientConnection.shutdown();
+                    //the client receives MShutDown message and gracefully shuts down at that
+                    // point so no need to tell it to shut down but we need to update our list of clients
+                    clients.remove(sender);
+
+                }
+                else if(msg instanceof MFailedMessage){
+                    MFailedMessage m2 = (MFailedMessage) msg;
+                    if (m2.getFailedMessage() instanceof MChat){
+                        //todo remove recipient client connection from clients
+                        String sender = ((MChat)m2.getFailedMessage()).getSenderUsername();
+                        MUnavailable m = new MUnavailable(sender, m2.getOriginalDestination());
+                        ClientConnection clientConnection = clients.get(sender);
+                        clientConnection.sendMessage(m);
                     }
-                    catch(IOException e) {
-                        System.out.println("Connection to " + sender + "is closed");
-                    }
+                    System.out.println("Message Failed to send to " + m2.getOriginalDestination());
+                }
+                else{
+                    System.out.println("message failed to process. " + msg);
                 }
 
 
 
-            }
-            catch (Exception e)
-            {
-                System.out.println("catching error in processing messages in ChatServer Run");
-                System.err.println(e);
-            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("catching error in processing messages in ChatServer Run");
+            System.err.println(e);
+        }
 
         }
 
@@ -115,7 +127,7 @@ public class ChatServer implements Runnable {
         try {
             System.out.println("shutting down remaining clients");
             for (ClientConnection clientConnection: clients.values()) {
-                clientConnection.shutdown();
+               clientConnection.shutdown();
             }
         }
         catch (IOException e) {

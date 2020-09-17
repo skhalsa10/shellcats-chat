@@ -26,7 +26,6 @@ public class ChatServerListener implements Runnable {
 
 
     public ChatServerListener(ServerSocket serverSocket, ConcurrentHashMap<String,ClientConnection> clients, PriorityBlockingQueue<Message> serverMessageQ){
-        //TODO initialize anything and start the thread.
         this.clients=clients;
         this.serverSocket=serverSocket;
         this.serverMessageQ = serverMessageQ;
@@ -34,43 +33,50 @@ public class ChatServerListener implements Runnable {
 
 
     }
+
+    /**
+     * this method is the method that runs for the thread. the thread stays alive as long as run does not end.
+     */
     @Override
     public void run() {
         isRunning = true;
-        while(isRunning)
+        while(isRunning) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("accepting new socket on chat server");
-                ClientConnection clientConnection = new ClientConnection("Null"+Long.toString(counter),clientSocket, serverMessageQ);
+                ClientConnection clientConnection = new ClientConnection("Null" + Long.toString(counter), clientSocket, serverMessageQ);
                 System.out.println("serverlistener created new clientconenction");
-                clients.put("Null"+Long.toString(counter),clientConnection);
+                clients.put("Null" + Long.toString(counter), clientConnection);
                 counter++;
                 Thread thread = new Thread(clientConnection);
                 thread.start();
                 System.out.println("Client connected!");
-                RequestUsername usernameMsg=new RequestUsername();
+                RequestUsername usernameMsg = new RequestUsername();
                 clientConnection.sendMessage(usernameMsg);
 
-            } catch (IOException e) {
+            } catch (Exception e) {
+                System.out.println("catching all exceptions in the ServerListener class in the thread.");
                 e.printStackTrace();
-
-                //TODO wait for new connections on the socket and create a ClientConnection.
-                // Add it to the clients map. and finally send the client a message requesting that
-                // it send over its username info so the server can maintain the clients map more efficiently.
             }
+        }
     }
 
+    /**
+     * gracefully close the serverListener
+     */
     public void shutdown()
     {
-        //TODO close all sockets and shutdown the thread gracefully
 
-        System.out.println("Connection to chat server is shut down");
         try {
             serverSocket.close();
+            //break out of the running thread
+            isRunning = false;
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("Connection to chat server is shut down");
 
     }
 }
