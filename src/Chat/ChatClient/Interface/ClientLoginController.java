@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -23,6 +25,8 @@ public class ClientLoginController {
     @FXML public TextField serverIP;
     @FXML public TextField port;
     @FXML public String stringPort;
+    @FXML public TextField clientMessage;
+    @FXML public TextArea messageLog;
 
     public void loginButtonClicked() throws IOException {
         System.out.println("Clicked");
@@ -42,9 +46,16 @@ public class ClientLoginController {
             System.out.println("Please try again");
         }
     }
-
     @FXML
-    private void handleClose(MouseEvent event) {
+    private void handleClose(MouseEvent event)
+    {
         System.exit(0);
+    }
+    @FXML
+    private void clickToSend() {
+        String message = username + ": " + clientMessage.getText();
+        clientMessage.clear();
+        messageLog.appendText(message + "\n");
+        System.out.println(message);
     }
 }

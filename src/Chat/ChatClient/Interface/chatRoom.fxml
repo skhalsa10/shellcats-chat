@@ -15,23 +15,23 @@
             <Image url="@chatroom.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="979.0" layoutY="2.0" prefHeight="32.0" prefWidth="13.0" text="X" onMouseClicked="#handleClose" textFill="WHITE">
+      <Label layoutX="979.0" layoutY="2.0" onMouseClicked="#handleClose" prefHeight="32.0" prefWidth="13.0" text="X" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="22.0" />
          </font>
       </Label>
-      <Label layoutX="464.0" layoutY="19.0" prefHeight="46.0" prefWidth="355.0" text="The Shellcats Chatroom" textFill="#dddbdb">
+      <Label layoutX="438.0" layoutY="20.0" prefHeight="46.0" prefWidth="355.0" text="The Shellcats Chatroom" textFill="#dddbdb">
          <font>
             <Font name="System Bold" size="31.0" />
          </font>
       </Label>
       <AnchorPane layoutX="1.0" layoutY="91.0" prefHeight="452.0" prefWidth="1000.0" style="-fx-background-color: #68111E;">
          <children>
-            <TextField layoutX="26.0" layoutY="406.0" prefHeight="25.0" prefWidth="830.0" />
-            <Button layoutX="874.0" layoutY="406.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Send" />
+            <TextField fx:id="clientMessage" layoutX="26.0" layoutY="406.0" prefHeight="25.0" prefWidth="830.0" />
+            <Button layoutX="874.0" layoutY="406.0" mnemonicParsing="false" onAction="#clickToSend" onKeyPressed="#keyToSend" prefHeight="25.0" prefWidth="100.0" text="Send" />
             <Pane layoutX="27.0" layoutY="67.0" prefHeight="318.0" prefWidth="947.0" style="-fx-background-color: #383838;" />
-            <TextField layoutX="155.0" layoutY="22.0" prefHeight="25.0" prefWidth="820.0" />
-            <TextArea layoutX="27.0" layoutY="67.0" opacity="0.15" prefHeight="318.0" prefWidth="947.0" style="-fx-text-fill: WHITE;"/>
+            <TextField fx:id="recipientUsername" layoutX="155.0" layoutY="22.0" prefHeight="25.0" prefWidth="820.0" />
+            <TextArea fx:id="messageLog" layoutX="27.0" layoutY="67.0" prefHeight="318.0" prefWidth="947.0" style="-fx-control-inner-background:#1A0409; -fx-text-fill: WHITE;" />
             <Label layoutX="27.0" layoutY="21.0" prefHeight="25.0" prefWidth="130.0" text="Recipient Username:" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
