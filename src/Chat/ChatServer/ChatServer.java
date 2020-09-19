@@ -71,6 +71,7 @@ public class ChatServer implements Runnable {
 
                 }
                 else if (msg instanceof MChat) {
+                    System.out.println("Server is processing MCHAT");
                     String recipient = ((MChat) msg).getRecipientUsername();
                     if (clients.containsKey(recipient)) {
                         ClientConnection clientConnection = clients.get(recipient);

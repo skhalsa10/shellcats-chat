@@ -62,6 +62,8 @@ public class ChatClient implements Runnable{
                 takeMessage();
             }
         }
+
+        System.out.println("ChatClient is shutting down");
     }
 
     /**
@@ -85,6 +87,7 @@ public class ChatClient implements Runnable{
      */
     private void processMessage(Message m) {
         if(m instanceof MShutDown) {
+            System.out.println("ChatCLient Received MShutDown");
             shutdown((MShutDown) m);
         }
         else if(m instanceof MChat) {
@@ -129,10 +132,10 @@ public class ChatClient implements Runnable{
 
     /**
      * this is a public method that allows a message to be placed in the messageG of the ChatClient
-     * @param M message to be placed in the queue
+     * @param m message to be placed in the queue
      */
-    public void sendMessage(Message M){
-        //TODO just drop this message into the messageQ and it will get processed when ready.
+    public void sendMessage(Message m){
+        messageQ.put(m);
     }
 
     /**
