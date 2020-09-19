@@ -83,9 +83,6 @@ public class ClientConnection implements Runnable{
                     else{
                         System.out.println("Client connection cant process " + receivedMessage);
                     }
-                    else if(receivedMessage instanceof MChat) {
-                        serverMessageQ.put((receivedMessage));
-                    }
 
                 }
                 else {
