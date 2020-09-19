@@ -28,15 +28,26 @@ public class ClientLoginController {
     @FXML public TextField clientMessage;
     @FXML public TextArea messageLog;
 
+    private String clientUsername;
+
+    @FXML
+    public void initialize() {
+        System.out.println("second");
+    }
+
     public void loginButtonClicked() throws IOException {
         System.out.println("Clicked");
         try {
             this.stringPort = port.getText();
             this.interfaceMessageQ = new PriorityBlockingQueue<>();
-            client = new ChatClient(username.getText(),serverIP.getText(),Integer.parseInt(stringPort),interfaceMessageQ);
+            this.clientUsername = username.getText();
+            client = new ChatClient(clientUsername,serverIP.getText(),Integer.parseInt(stringPort),interfaceMessageQ);
+            System.out.println(username.getText());
             Stage stage;
             stage = (Stage) serverIP.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("chatRoom.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("chatRoom.fxml"));
+            Parent root = loader.load();
+            ((ChatRoomController)loader.getController()).setData(clientUsername, client);
             stage.setScene(new Scene(root, 1000, 572));
             stage.setResizable(false);
             stage.show();
@@ -53,7 +64,7 @@ public class ClientLoginController {
     }
     @FXML
     private void clickToSend() {
-        String message = username + ": " + clientMessage.getText();
+        String message = clientUsername + ": " + clientMessage.getText();
         clientMessage.clear();
         messageLog.appendText(message + "\n");
         System.out.println(message);
