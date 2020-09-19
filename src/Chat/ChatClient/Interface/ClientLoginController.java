@@ -47,7 +47,7 @@ public class ClientLoginController {
             stage = (Stage) serverIP.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("chatRoom.fxml"));
             Parent root = loader.load();
-            ((ChatRoomController)loader.getController()).setData(clientUsername, client);
+            ((ChatRoomController)loader.getController()).setData(clientUsername, client, interfaceMessageQ);
             stage.setScene(new Scene(root, 1000, 572));
             stage.setResizable(false);
             stage.show();
@@ -61,12 +61,5 @@ public class ClientLoginController {
     private void handleClose(MouseEvent event)
     {
         System.exit(0);
-    }
-    @FXML
-    private void clickToSend() {
-        String message = clientUsername + ": " + clientMessage.getText();
-        clientMessage.clear();
-        messageLog.appendText(message + "\n");
-        System.out.println(message);
     }
 }
