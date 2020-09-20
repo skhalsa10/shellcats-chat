@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * This class creates a GUI by creating a stage a filling it with data loaded from clientlogin.fxml
+ */
+
 public class Main extends Application {
 
     @Override
@@ -15,7 +19,6 @@ public class Main extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(new Scene(root, 1000, 572));
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {

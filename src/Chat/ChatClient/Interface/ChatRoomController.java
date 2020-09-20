@@ -13,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.sql.Timestamp;
 import java.util.Scanner;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -31,27 +32,48 @@ public class ChatRoomController {
         new GUICommander();
     }
 
+    /**
+     * This method imports values from the previous GUI controller (the login GUI).
+     * @param username
+     * @param chatCLient
+     * @param interfaceMessageQ
+     */
+
     public void setData(String username, ChatClient chatCLient, PriorityBlockingQueue<Message> interfaceMessageQ) {
         this.clientUsername = username;
         this.client = chatCLient;
         this.interfaceMessageQ = interfaceMessageQ;
     }
 
+    /**
+     * This closes the GUI when you click the X at the top right corner.
+     * @param event
+     */
+
     @FXML
     private void handleClose(MouseEvent event) {
         System.exit(0);
     }
+
+    /**
+     * This prints the user's message to the textarea of the chatroom GUI. It also adds the username and timestamp.
+     */
 
     @FXML
     private void clickToSend() {
         String message = clientUsername + ": " + clientMessage.getText();
         this.recipientUsername = receiverUsername.getText();
         clientMessage.clear();
-        messageLog.appendText(message + "\n");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        messageLog.appendText(timestamp + ": " + message + "\n");
         System.out.println(message);
         MChat m = new MChat(clientUsername, recipientUsername, clientMessage.getText());
         client.sendMessage(m);
     }
+
+    /**
+     * This creates another thread to listen for incoming messages and takes actions according to what it receives.
+     */
 
     class GUICommander implements Runnable {
         private boolean GUICommanderRunning;
@@ -71,10 +93,12 @@ public class ChatRoomController {
                         GUICommanderRunning = false;
                     }
                     if (incomingMessage instanceof MUnavailable){
-                        //TODO say it ain't availble
+                        messageLog.appendText("The recipient client is unavailable.\n");
                     }
                     if (incomingMessage instanceof MChat){
-                        //TODO appendtext to textarea of chatroom
+                        String chatMessage = new String();
+                        chatMessage = ((MChat) incomingMessage).getChatMessage();
+                        messageLog.appendText((((MChat) incomingMessage).getSenderUsername()) + chatMessage + "\n");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

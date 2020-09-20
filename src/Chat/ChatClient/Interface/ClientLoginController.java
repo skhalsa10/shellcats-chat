@@ -16,6 +16,10 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ * This class is the controller file to respond to input given to the login GUI
+ */
+
 public class ClientLoginController {
 
     private ChatClient client;
@@ -34,6 +38,13 @@ public class ClientLoginController {
     public void initialize() {
         System.out.println("second");
     }
+
+    /**
+     * This method contains the actions taken when the login button is clicked. It will save the
+     * the input given to it and pass it along to the chatroom controller. It also opens up the
+     * next GUI interface by loading it from chatRoom.fxml and closes the current one.
+     * @throws IOException
+     */
 
     public void loginButtonClicked() throws IOException {
         System.out.println("Clicked");
@@ -57,6 +68,11 @@ public class ClientLoginController {
             System.out.println("Please try again");
         }
     }
+
+    /**
+     * This closes the GUI when you click the X at the top right corner.
+     * @param event
+     */
     @FXML
     private void handleClose(MouseEvent event)
     {
