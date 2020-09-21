@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -31,6 +32,7 @@ public class ClientLoginController {
     @FXML public String stringPort;
     @FXML public TextField clientMessage;
     @FXML public TextArea messageLog;
+    @FXML public TextArea thisUsername;
 
     private String clientUsername;
 
@@ -58,10 +60,14 @@ public class ClientLoginController {
             stage = (Stage) serverIP.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("chatRoom.fxml"));
             Parent root = loader.load();
-            ((ChatRoomController)loader.getController()).setData(clientUsername, client, interfaceMessageQ);
+            //((ChatRoomController)loader.getController()).setData(clientUsername, client, interfaceMessageQ);
+            ChatRoomController controller = ((ChatRoomController)loader.getController());
+            controller.setData(clientUsername, client, interfaceMessageQ);
             stage.setScene(new Scene(root, 1000, 572));
-            stage.setResizable(false);
             stage.show();
+            stage.setOnCloseRequest(e -> {
+                controller.handleClose(null);
+            });
         }
         catch (NumberFormatException e ) {
             System.out.println("Arguments: String username, int Server, int Port number");
