@@ -52,6 +52,7 @@ public class ChatRoomController {
 
     @FXML
     private void handleClose(MouseEvent event) {
+        interfaceMessageQ.put(new MShutDown(clientUsername));
         System.exit(0);
     }
 
@@ -63,12 +64,12 @@ public class ChatRoomController {
     private void clickToSend() {
         String message = clientUsername + ": " + clientMessage.getText();
         this.recipientUsername = receiverUsername.getText();
-        clientMessage.clear();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         messageLog.appendText(timestamp + ": " + message + "\n");
-        System.out.println(message);
+        System.out.println("tomato" + message);
         MChat m = new MChat(clientUsername, recipientUsername, clientMessage.getText());
         client.sendMessage(m);
+        clientMessage.clear();
     }
 
     /**
@@ -91,6 +92,7 @@ public class ChatRoomController {
                     Message incomingMessage = interfaceMessageQ.take();
                     if (incomingMessage instanceof MShutDown){
                         GUICommanderRunning = false;
+                        client.sendMessage(incomingMessage);
                     }
                     if (incomingMessage instanceof MUnavailable){
                         messageLog.appendText("The recipient client is unavailable.\n");
@@ -98,6 +100,7 @@ public class ChatRoomController {
                     if (incomingMessage instanceof MChat){
                         String chatMessage = new String();
                         chatMessage = ((MChat) incomingMessage).getChatMessage();
+                        System.out.println("potato" + chatMessage);
                         messageLog.appendText((((MChat) incomingMessage).getSenderUsername()) + chatMessage + "\n");
                     }
                 } catch (InterruptedException e) {
