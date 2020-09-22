@@ -44,6 +44,7 @@ public class ChatClientCLI implements Runnable{
     private boolean isRunning;
     private String recipient;
 
+    private boolean researchMode = false;
 
     /**
      * The constructor for the ChatCLientCLI
@@ -106,6 +107,22 @@ public class ChatClientCLI implements Runnable{
 
     }
 
+    private void setResearchMode() {
+        this.researchMode = true;
+    }
+
+    private void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+
+    private Boolean getResearchMode() {
+        return researchMode;
+    }
+
+    private String getRecipient() {
+        return recipient;
+    }
+
     /**
      * this is the main entry point for chatClient using CLI as the interface.
      * @param args - this should contain String username, String serverHostname, and int ServerPort
@@ -113,14 +130,22 @@ public class ChatClientCLI implements Runnable{
     public static void main(String[] args){
         //todo add a research flag that helps automate some research
 
-        if(args.length != 3){
+        if(args.length != 3 && args.length != 5){
             PrintInstructions();
             return;
         }
         String username = args[0];
         String serverHost = args[1];
         int serverPort = Integer.parseInt(args[2]);
-        new ChatClientCLI(username,serverHost,serverPort);
+        ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
+        if (args.length == 5) {
+            if(args[3].equalsIgnoreCase("research")) {
+                clientCLI.setResearchMode();
+                clientCLI.setRecipient(args[4]);
+                System.out.println(clientCLI.getRecipient());
+                System.out.println(clientCLI.getResearchMode());
+            }
+        }
 
 
 
