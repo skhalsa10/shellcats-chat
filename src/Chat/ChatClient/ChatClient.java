@@ -29,6 +29,7 @@ public class ChatClient implements Runnable{
     // doesnt matter which class is running on the other end.
     private PriorityBlockingQueue<Message> interfaceMessageQ;
 
+    private String recipient;
     /**
      * the constructor of the ChatClient. It will initialize everything and then loop
      * @param username client username
@@ -105,6 +106,15 @@ public class ChatClient implements Runnable{
         else if(m instanceof MUsernameExists) {
             System.out.println(((MUsernameExists) m).getMsg());
             interfaceMessageQ.put(m);
+        }
+        else if (m instanceof MSetRecipient) {
+            this.recipient = ((MSetRecipient) m).getRecipient();
+        }
+        else if (m instanceof MSpam) {
+            for(int i = 0; i < 5; i++) {
+                MChat msg = new MChat(username, recipient, "Ohana means family");
+                interfaceMessageQ.put(msg);
+            }
         }
     }
 
