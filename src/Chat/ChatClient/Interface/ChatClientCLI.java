@@ -107,22 +107,6 @@ public class ChatClientCLI implements Runnable{
 
     }
 
-    private void setResearchMode() {
-        this.researchMode = true;
-    }
-
-    private void setRecipient(String recipient) {
-        this.recipient = recipient;
-    }
-
-    private Boolean getResearchMode() {
-        return researchMode;
-    }
-
-    private String getRecipient() {
-        return recipient;
-    }
-
     /**
      * this is the main entry point for chatClient using CLI as the interface.
      * @param args - this should contain String username, String serverHostname, and int ServerPort
@@ -140,10 +124,11 @@ public class ChatClientCLI implements Runnable{
         ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
         if (args.length == 5) {
             if(args[3].equalsIgnoreCase("research")) {
-                clientCLI.setResearchMode();
-                clientCLI.setRecipient(args[4]);
-                System.out.println(clientCLI.getRecipient());
-                System.out.println(clientCLI.getResearchMode());
+                clientCLI.researchMode = true;
+                clientCLI.recipient = args[4];
+                clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
+                System.out.println(clientCLI.researchMode);
+                System.out.println(clientCLI.recipient);
             }
         }
 
