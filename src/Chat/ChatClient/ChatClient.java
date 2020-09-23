@@ -111,7 +111,7 @@ public class ChatClient implements Runnable{
             this.recipient = ((MSetRecipient) m).getRecipient();
         }
         else if (m instanceof MSpam) {
-            for(int i = 0; i < 5; i++) {
+            for(int i = 0; i < 10; i++) {
                 MChat msg = new MChat(username, recipient, "Ohana means family");
                 interfaceMessageQ.put(msg);
             }
