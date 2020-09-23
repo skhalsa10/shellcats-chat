@@ -2,7 +2,10 @@ package Chat.ChatServer;
 
 import Chat.Messages.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -124,6 +127,14 @@ public class ChatServer implements Runnable {
                     System.out.println("delay avg " + ((MDelayTimes) msg).getAvgDelay());
                     for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
                         System.out.println("delay time: " + Long.toString(i));
+                    }
+                    try (FileWriter fw = new FileWriter("log.csv", true);
+                         BufferedWriter bw = new BufferedWriter(fw);
+                         PrintWriter out = new PrintWriter(bw);) {
+                        out.println(((MDelayTimes) msg).getRecipient() + "," + ((MDelayTimes) msg).getAvgDelay());
+                    }
+                    catch (IOException e) {
+                        System.err.println(e);
                     }
                 }
                 else{
