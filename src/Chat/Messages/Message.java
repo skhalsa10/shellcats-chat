@@ -23,7 +23,7 @@ public abstract class Message implements Comparable<Message> , Serializable {
      *
      * @return timestamp in nanoseconds
      */
-    protected LocalDateTime getTimeStamp(){
+    public LocalDateTime getTimeStamp(){
         return this.timeStamp;
     }
 
