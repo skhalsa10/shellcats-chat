@@ -118,6 +118,13 @@ public class ChatServer implements Runnable {
                     }
                     System.out.println("Message Failed to send to " + m2.getOriginalDestination());
                 }
+                else if(msg instanceof MDelayTimes) {
+                    System.out.println("delay recipient " + ((MDelayTimes) msg).getRecipient());
+                    System.out.println("delay sender " + ((MDelayTimes) msg).getSender());
+                    for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
+                        System.out.println("delay time: " + Long.toString(i));
+                    }
+                }
                 else{
                     System.out.println("message failed to process. " + msg);
                 }

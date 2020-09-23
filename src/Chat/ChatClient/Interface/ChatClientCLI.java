@@ -124,6 +124,7 @@ public class ChatClientCLI implements Runnable{
         ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
         if (args.length == 5 && args[3].equalsIgnoreCase("research")) {
             clientCLI.researchMode = true;
+            clientCLI.chatCLient.setResearchMode();
             clientCLI.recipient = args[4];
             clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
             System.out.println(clientCLI.researchMode);

@@ -2,8 +2,12 @@ package Chat.ChatClient;
 
 import Chat.Messages.*;
 
+import java.util.ArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.Duration;
+
 
 
 /**
@@ -30,6 +34,9 @@ public class ChatClient implements Runnable{
     private PriorityBlockingQueue<Message> interfaceMessageQ;
 
     private String recipient;
+    private boolean researchMode = false;
+    private int numChatMsgs = 0;
+    private ArrayList<Long> delayTimes = new ArrayList<Long>() ;
     /**
      * the constructor of the ChatClient. It will initialize everything and then loop
      * @param username client username
@@ -111,7 +118,7 @@ public class ChatClient implements Runnable{
             this.recipient = ((MSetRecipient) m).getRecipient();
         }
         else if (m instanceof MSpam) {
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i < 5; i++) {
                 MChat msg = new MChat(username, recipient, "Spam? To make spam musubi???");
                 interfaceMessageQ.put(msg);
             }
@@ -133,6 +140,17 @@ public class ChatClient implements Runnable{
     private void forwardMessage(MChat m) {
         String recipient = m.getRecipientUsername();
         if(recipient.equalsIgnoreCase(username)) {
+            if(researchMode) {
+                Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
+                long delay = Math.abs(duration.getNano());
+                System.out.println(delay);
+                delayTimes.add(delay);
+                if(delayTimes.size() == 5) {
+                    System.out.println("all messages received in research mode!!!");
+                    MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(), delayTimes);
+                    serverConnection.sendMessage(msg);
+                }
+            }
             interfaceMessageQ.put(m);
         }
         else {
@@ -177,6 +195,10 @@ public class ChatClient implements Runnable{
         catch (Exception e) {
             System.err.println(e);
         }
+    }
+
+    public void setResearchMode() {
+        this.researchMode = true;
     }
 
     public static void main(String[] args) {
