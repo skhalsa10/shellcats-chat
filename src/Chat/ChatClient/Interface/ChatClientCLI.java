@@ -122,14 +122,13 @@ public class ChatClientCLI implements Runnable{
         String serverHost = args[1];
         int serverPort = Integer.parseInt(args[2]);
         ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
-        if (args.length == 5) {
-            if(args[3].equalsIgnoreCase("research")) {
-                clientCLI.researchMode = true;
-                clientCLI.recipient = args[4];
-                clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
-                System.out.println(clientCLI.researchMode);
-                System.out.println(clientCLI.recipient);
-            }
+        if (args.length == 5 && args[3].equalsIgnoreCase("research")) {
+            clientCLI.researchMode = true;
+            clientCLI.recipient = args[4];
+            clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
+            System.out.println(clientCLI.researchMode);
+            System.out.println(clientCLI.recipient);
+
         }
 
 
