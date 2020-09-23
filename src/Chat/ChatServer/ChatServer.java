@@ -74,6 +74,13 @@ public class ChatServer implements Runnable {
                         // For research mode: check if total number of clients needed is reached
                         if(researchMode && clients.size() == totalNumClients) {
                             //TODO loop through all clients or half the clients???
+                            int numSendingClients = totalNumClients/2;
+                            for(int i = 1; i <= numSendingClients; i++) {
+                                String sendingClient = "client" + Integer.toString(i);
+                                System.out.println(sendingClient);
+                                ClientConnection cc = clients.get(sendingClient);
+                                cc.sendMessage(new MSpam());
+                            }
 
                         }
                     }
