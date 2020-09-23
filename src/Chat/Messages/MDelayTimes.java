@@ -10,12 +10,14 @@ public class MDelayTimes extends Message {
     private String sender;
     private String recipient;
     private ArrayList<Long> delayTimes;
+    private Long avgDelay;
 
-    public MDelayTimes(String sender, String recipient,  ArrayList<Long> delayTimes) {
+    public MDelayTimes(String sender, String recipient,  ArrayList<Long> delayTimes, Long avgDelay) {
         super();
         this.sender = sender;
         this.recipient = recipient;
         this.delayTimes = delayTimes;
+        this.avgDelay = avgDelay;
     }
 
     public String getRecipient() {
@@ -28,5 +30,9 @@ public class MDelayTimes extends Message {
 
     public ArrayList<Long> getDelayTimes() {
         return delayTimes;
+    }
+
+    public Long getAvgDelay() {
+        return avgDelay;
     }
 }

@@ -147,7 +147,13 @@ public class ChatClient implements Runnable{
                 delayTimes.add(delay);
                 if(delayTimes.size() == 5) {
                     System.out.println("all messages received in research mode!!!");
-                    MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(), delayTimes);
+                    long total = 0;
+                    for(Long i : delayTimes) {
+                        total += i;
+                    }
+                    long avgDelay = total/5;
+                    MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(),
+                                        delayTimes, avgDelay);
                     serverConnection.sendMessage(msg);
                 }
             }

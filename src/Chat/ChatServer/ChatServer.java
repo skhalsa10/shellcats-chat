@@ -121,6 +121,7 @@ public class ChatServer implements Runnable {
                 else if(msg instanceof MDelayTimes) {
                     System.out.println("delay recipient " + ((MDelayTimes) msg).getRecipient());
                     System.out.println("delay sender " + ((MDelayTimes) msg).getSender());
+                    System.out.println("delay avg " + ((MDelayTimes) msg).getAvgDelay());
                     for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
                         System.out.println("delay time: " + Long.toString(i));
                     }
