@@ -22,6 +22,9 @@ public class ChatServer implements Runnable {
     private ChatServerListener chatServerListener;
     private boolean connected=false;
 
+    private boolean researchMode = false;
+    private int totalNumClients = 0;
+
     public ChatServer(String serverHostname, int serverport){
         this.serverHostname=serverHostname;
         this.serverport = serverport;
@@ -67,6 +70,12 @@ public class ChatServer implements Runnable {
                         //place it into the clients with correct key
                         clients.put(clientMsg.getUserName(), clientConnection);
                         System.out.print(clients.keySet());
+
+                        // For research mode: check if total number of clients needed is reached
+                        if(researchMode && clients.size() == totalNumClients) {
+                            //TODO loop through all clients or half the clients???
+
+                        }
                     }
 
                 }
@@ -150,10 +159,16 @@ public class ChatServer implements Runnable {
 
     }
     public static void main(String[] args){
-        if (args.length != 2)
+        if (args.length != 2 && args.length != 4)
         {
             System.out.println("Wrong number of parameters");
         }
         ChatServer chatServer=new ChatServer(args[0], Integer.parseInt(args[1]));
+        if(args.length == 4 && args[2].equalsIgnoreCase("research")) {
+            chatServer.researchMode = true;
+            chatServer.totalNumClients = Integer.parseInt(args[3]);
+            System.out.println(chatServer.researchMode);
+            System.out.println(chatServer.totalNumClients);
+        }
     }
 }
