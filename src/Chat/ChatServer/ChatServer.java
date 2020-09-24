@@ -29,6 +29,7 @@ public class ChatServer implements Runnable {
     private boolean researchMode = false;
     private int totalNumClients = 0;
     private int totalNumDelayMsgs = 0;
+    private String logFileName = "log.csv";
 
     public ChatServer(String serverHostname, int serverport){
         this.serverHostname=serverHostname;
@@ -130,7 +131,7 @@ public class ChatServer implements Runnable {
                     for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
                         System.out.println("delay time: " + Long.toString(i));
                     }
-                    try (FileWriter fw = new FileWriter("log.csv", true);
+                    try (FileWriter fw = new FileWriter(logFileName, true);
                          BufferedWriter bw = new BufferedWriter(fw);
                          PrintWriter out = new PrintWriter(bw);) {
                         if(totalNumDelayMsgs == 0) {
@@ -202,16 +203,20 @@ public class ChatServer implements Runnable {
 
     }
     public static void main(String[] args){
-        if (args.length != 2 && args.length != 4)
+        if (args.length != 2 && args.length != 4 && args.length != 5)
         {
             System.out.println("Wrong number of parameters");
         }
         ChatServer chatServer=new ChatServer(args[0], Integer.parseInt(args[1]));
-        if(args.length == 4 && args[2].equalsIgnoreCase("research")) {
+        if(args.length >= 4 && args[2].equalsIgnoreCase("research")) {
             chatServer.researchMode = true;
             chatServer.totalNumClients = Integer.parseInt(args[3]);
             System.out.println(chatServer.researchMode);
             System.out.println(chatServer.totalNumClients);
+            if(args.length == 5) {
+                chatServer.logFileName = args[4];
+            }
         }
+
     }
 }
