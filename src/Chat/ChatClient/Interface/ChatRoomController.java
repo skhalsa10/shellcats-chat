@@ -26,6 +26,7 @@ public class ChatRoomController {
     @FXML public TextField clientMessage;
     @FXML public TextArea messageLog;
     @FXML public TextField receiverUsername;
+    @FXML public TextArea thisUsername;
 
     @FXML
     public void initialize() {
@@ -43,6 +44,7 @@ public class ChatRoomController {
         this.clientUsername = username;
         this.client = chatCLient;
         this.interfaceMessageQ = interfaceMessageQ;
+        thisUsername.appendText("Your username: " + clientUsername);
     }
 
     /**
@@ -51,7 +53,7 @@ public class ChatRoomController {
      */
 
     @FXML
-    private void handleClose(MouseEvent event) {
+    public void handleClose(MouseEvent event) {
         interfaceMessageQ.put(new MShutDown(clientUsername));
         System.exit(0);
     }
@@ -101,7 +103,8 @@ public class ChatRoomController {
                         String chatMessage = new String();
                         chatMessage = ((MChat) incomingMessage).getChatMessage();
                         System.out.println("potato" + chatMessage);
-                        messageLog.appendText((((MChat) incomingMessage).getSenderUsername()) + chatMessage + "\n");
+                        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                        messageLog.appendText(timestamp + ": " + (((MChat) incomingMessage).getSenderUsername()) + ": " + chatMessage + "\n");
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
