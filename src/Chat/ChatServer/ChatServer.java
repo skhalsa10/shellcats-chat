@@ -133,7 +133,14 @@ public class ChatServer implements Runnable {
                     try (FileWriter fw = new FileWriter("log.csv", true);
                          BufferedWriter bw = new BufferedWriter(fw);
                          PrintWriter out = new PrintWriter(bw);) {
-                        out.println(((MDelayTimes) msg).getRecipient() + "," + ((MDelayTimes) msg).getAvgDelay());
+                        if(totalNumDelayMsgs == 0) {
+                            out.println("Recipient,1,2,3,4,5,6,7,8,9,10,Average");
+                        }
+                        out.print(((MDelayTimes) msg).getRecipient() + ",");
+                        for (Long t : ((MDelayTimes) msg).getDelayTimes()) {
+                            out.print(Long.toString(t) + ",");
+                        }
+                        out.println(((MDelayTimes) msg).getAvgDelay());
                     }
                     catch (IOException e) {
                         System.err.println(e);
