@@ -1,5 +1,6 @@
 package Chat.ChatServer;
 
+import Chat.ChatClient.ChatClient;
 import Chat.Messages.*;
 
 import java.io.BufferedWriter;
@@ -27,6 +28,7 @@ public class ChatServer implements Runnable {
 
     private boolean researchMode = false;
     private int totalNumClients = 0;
+    private int totalNumDelayMsgs = 0;
 
     public ChatServer(String serverHostname, int serverport){
         this.serverHostname=serverHostname;
@@ -135,6 +137,14 @@ public class ChatServer implements Runnable {
                     }
                     catch (IOException e) {
                         System.err.println(e);
+                    }
+                    totalNumDelayMsgs++;
+                    if(totalNumDelayMsgs == totalNumClients/2) {
+                        for(String c : clients.keySet()) {
+                            System.out.println("this be the client name " + c);
+                            ClientConnection cc = clients.get(c);
+                            cc.sendMessage(new MStopResearch());
+                        }
                     }
                 }
                 else{

@@ -43,6 +43,7 @@ public class ChatClientCLI implements Runnable{
     private String username;
     private boolean isRunning;
     private String recipient;
+    private CLICommander commander;
 
     private boolean researchMode = false;
 
@@ -58,7 +59,7 @@ public class ChatClientCLI implements Runnable{
         this.chatCLient = new ChatClient(username,serverHostName,serverPort,interfaceMessageQ);
         new Thread(this).start();
         isRunning = true;
-        new CLICommander();
+        this.commander = new CLICommander();
     }
 
     /**
@@ -92,6 +93,13 @@ public class ChatClientCLI implements Runnable{
                 }
                 else if(m instanceof MUnavailable){
                     System.out.println(ANSI_RED + "Recipient " + ((MUnavailable) m).getRecipient() + " is not available."+ ANSI_RESET);
+                }
+                else if(m instanceof MStopResearch) {
+                    System.out.println("stop the research!!!!");
+                    System.out.println("i am the user " + username);
+                    interfaceMessageQ.put(new MShutDown(username));
+                    commander.CLICommanderRunning = false;
+
                 }
                 else{
                     System.out.println("do not know how to process message inside of chatclientclie: " + m);
