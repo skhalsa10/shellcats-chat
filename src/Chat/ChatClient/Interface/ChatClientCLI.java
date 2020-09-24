@@ -59,7 +59,9 @@ public class ChatClientCLI implements Runnable{
         this.chatCLient = new ChatClient(username,serverHostName,serverPort,interfaceMessageQ);
         new Thread(this).start();
         isRunning = true;
-        this.commander = new CLICommander();
+        if(!researchMode) {
+            this.commander = new CLICommander();
+        }
     }
 
     /**
@@ -98,8 +100,6 @@ public class ChatClientCLI implements Runnable{
                     System.out.println("stop the research!!!!");
                     System.out.println("i am the user " + username);
                     interfaceMessageQ.put(new MShutDown(username));
-                    commander.CLICommanderRunning = false;
-
                 }
                 else{
                     System.out.println("do not know how to process message inside of chatclientclie: " + m);
