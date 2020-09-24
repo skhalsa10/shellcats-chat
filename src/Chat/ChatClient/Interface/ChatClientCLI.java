@@ -45,7 +45,7 @@ public class ChatClientCLI implements Runnable{
     private String recipient;
     private CLICommander commander;
 
-    private boolean researchMode = false;
+    static boolean researchMode = false;
 
     /**
      * The constructor for the ChatCLientCLI
@@ -61,6 +61,9 @@ public class ChatClientCLI implements Runnable{
         isRunning = true;
         if(!researchMode) {
             this.commander = new CLICommander();
+        }
+        else {
+            System.out.println("the commander did not start");
         }
     }
 
@@ -129,15 +132,19 @@ public class ChatClientCLI implements Runnable{
         String username = args[0];
         String serverHost = args[1];
         int serverPort = Integer.parseInt(args[2]);
-        ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
+
         if (args.length == 5 && args[3].equalsIgnoreCase("research")) {
-            clientCLI.researchMode = true;
+            researchMode = true;
+            ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
             clientCLI.chatCLient.setResearchMode();
             clientCLI.recipient = args[4];
             clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
             System.out.println(clientCLI.researchMode);
             System.out.println(clientCLI.recipient);
 
+        }
+        else {
+            ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
         }
 
 
