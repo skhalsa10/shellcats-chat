@@ -20,6 +20,6 @@ for /l %%i in (1, 1, %BOUND%) do (
 
     SET /A PAIR = %CLIENTS% - !MIN!
 
-    START /B "C:\Program Files\Java\jre-10.0.2\bin\java -jar" %PATH% client%%i 73.42.106.175 8558 research client!PAIR!
+    START /B "C:\Program Files\Java\jre-10.0.2\bin\java -jar" %PATH% client!PAIR! 73.42.106.175 8558 research client%%i
 
 )
