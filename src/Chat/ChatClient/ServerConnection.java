@@ -37,7 +37,7 @@ public class ServerConnection implements Runnable{
         this.clientMessageQ = clientMessageQ;
         this.in = new ObjectInputStream(this.socket.getInputStream());
         this.out = new ObjectOutputStream(this.socket.getOutputStream());
-        connected = true;
+        // connected = true;
     }
     /**
      * this function is what runs runnable thread is started.
@@ -94,6 +94,10 @@ public class ServerConnection implements Runnable{
      */
     public boolean isConnected() {
         return connected;
+    }
+
+    public void setConnected() {
+        connected = true;
     }
 
     /**

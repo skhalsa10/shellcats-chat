@@ -64,7 +64,11 @@ public class ChatClient implements Runnable{
         //TODO loop over the messageQ and process it. make sure to forward
         // incoming messages to the interfaceMessageQ if it needs to be
         // displayed. If it is an outgoing message send it out the serverConnection
-        if (serverConnection.isConnected()) {
+        if(serverConnection == null) {
+            interfaceMessageQ.put(new MShutDown(username));
+            isRunning = false;
+        }
+        else if (serverConnection.isConnected()) {
             isRunning = true;
             while(isRunning) {
                 takeMessage();
@@ -201,6 +205,7 @@ public class ChatClient implements Runnable{
             Socket socket = new Socket(serverHostName, serverPort);
             this.messageQ = new PriorityBlockingQueue<Message>();
             serverConnection = new ServerConnection(socket, messageQ);
+            serverConnection.setConnected();
             new Thread(serverConnection).start();
         }
         catch (Exception e) {
