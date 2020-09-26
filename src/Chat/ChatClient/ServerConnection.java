@@ -46,11 +46,6 @@ public class ServerConnection implements Runnable{
      */
     @Override
     public void run() {
-
-        //TODO read from the input stream and cast to message and put in the clientMessageQ
-        // Make sure this is a Message type  before casting and output error if not Message type
-
-        //TODO catch all errors that get thrown and handle appropriately.
         Message receivedMessage;
         while(connected) {
             try {
@@ -60,7 +55,6 @@ public class ServerConnection implements Runnable{
                     clientMessageQ.put(receivedMessage);
                 }
                 else {
-                    //TODO make this into an error...forgot how to do that...
                     System.out.println("not a Message!!!");
                 }
 
@@ -98,7 +92,7 @@ public class ServerConnection implements Runnable{
 
     /**
      * Close the output stream, input stream and socket.
-     * @throws IOException
+     * @throws IOException io exception
      */
     public void closeConnection() throws IOException {
         try {
@@ -118,7 +112,6 @@ public class ServerConnection implements Runnable{
      * this method will gracefully shutdown everything
      */
     public void shutdown(){
-        //TODO gracefully close input stream, output stream, and socket. then break out of the running loop.
         connected = false;
         try {
             closeConnection();
