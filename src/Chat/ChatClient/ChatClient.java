@@ -66,7 +66,7 @@ public class ChatClient implements Runnable{
         // displayed. If it is an outgoing message send it out the serverConnection
         if(serverConnection == null) {
             interfaceMessageQ.put(new MShutDown(username));
-            isRunning = false;
+            //isRunning = false;
         }
         else if (serverConnection.isConnected()) {
             isRunning = true;
@@ -177,7 +177,9 @@ public class ChatClient implements Runnable{
      * @param m message to be placed in the queue
      */
     public void sendMessage(Message m){
-        messageQ.put(m);
+        if(messageQ != null) {
+            messageQ.put(m);
+        }
     }
 
     /**
@@ -189,8 +191,12 @@ public class ChatClient implements Runnable{
         //TODO this gets called when a Shutdown message is received it will gracefully close all
         // connections and the break out of run loop
         isRunning = false;
-        serverConnection.sendMessage(m);
-        serverConnection.shutdown();
+
+        if(serverConnection != null) {
+            serverConnection.sendMessage(m);
+            serverConnection.shutdown();
+        }
+
 
     }
 
