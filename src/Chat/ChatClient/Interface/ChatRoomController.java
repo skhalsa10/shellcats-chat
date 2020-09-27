@@ -3,16 +3,21 @@ package Chat.ChatClient.Interface;
 import Chat.ChatClient.ChatClient;
 import Chat.Messages.*;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Scanner;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -64,14 +69,24 @@ public class ChatRoomController {
 
     @FXML
     private void clickToSend() {
+        // Checks for an empty string
+        if (clientMessage.getText().equals("")){
+            return;
+        }
+        // else it will send the message
         String message = clientUsername + ": " + clientMessage.getText();
         this.recipientUsername = receiverUsername.getText();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         messageLog.appendText(timestamp + ": " + message + "\n");
-        System.out.println("tomato" + message);
         MChat m = new MChat(clientUsername, recipientUsername, clientMessage.getText());
         client.sendMessage(m);
         clientMessage.clear();
+    }
+    @FXML
+    public void handleEnterKey(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ENTER){
+            clickToSend();
+        }
     }
 
     /**
@@ -89,6 +104,14 @@ public class ChatRoomController {
 
         @Override
         public void run() {
+            clientMessage.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    if (event.getCode() == KeyCode.ENTER) {
+                        clickToSend();
+                    }
+                }
+            });
             while (GUICommanderRunning) {
                 try {
                     Message incomingMessage = interfaceMessageQ.take();
@@ -102,7 +125,6 @@ public class ChatRoomController {
                     if (incomingMessage instanceof MChat){
                         String chatMessage = new String();
                         chatMessage = ((MChat) incomingMessage).getChatMessage();
-                        System.out.println("potato" + chatMessage);
                         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                         messageLog.appendText(timestamp + ": " + (((MChat) incomingMessage).getSenderUsername()) + ": " + chatMessage + "\n");
                     }

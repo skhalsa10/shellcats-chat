@@ -9,11 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -83,5 +85,16 @@ public class ClientLoginController {
     private void handleClose(MouseEvent event)
     {
         System.exit(0);
+    }
+    @FXML
+    public void handleEnterKey(KeyEvent keyEvent) {
+        if(keyEvent.getCode() == KeyCode.ENTER) {
+            try {
+                loginButtonClicked();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 }

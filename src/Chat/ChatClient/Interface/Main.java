@@ -25,3 +25,6 @@ public class Main extends Application {
         launch(args);
     }
 }
+//javafx.stage.Screen.getPrimary().getBounds().getMaxX();
+//javafx.stage.Screen.getPrimary().getBounds().getMaxY();
+//0.625*javafx.stage.Screen.getPrimary().getBounds().getMaxX();
