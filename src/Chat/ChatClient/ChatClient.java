@@ -16,7 +16,7 @@ import java.time.Duration;
  * and it will send the message out the socket if the message has a destination
  * that is not its own username
  *
- * @author Put name here
+ * @author Michelle Louie
  * @author Siri wrote the skeleton
  *
  * @version 1.0
@@ -36,7 +36,7 @@ public class ChatClient implements Runnable{
     private String recipient;
     private boolean researchMode = false;
     private int numChatMsgs = 0;
-    private ArrayList<Long> delayTimes = new ArrayList<Long>() ;
+    private ArrayList<Long> delayTimes = new ArrayList<>() ;
     /**
      * the constructor of the ChatClient. It will initialize everything and then loop
      * @param username client username
@@ -45,8 +45,6 @@ public class ChatClient implements Runnable{
      * @param interfaceMessageQ message queue for client interface
      */
     public ChatClient(String username, String serverHostName, int serverPort, PriorityBlockingQueue<Message> interfaceMessageQ){
-        //TODO initialize everything here. add any  more parameters as
-        // needed. Build the server connection as well. finally start the thread.
         this.username = username;
         this.serverHostName = serverHostName;
         this.serverPort = serverPort;
@@ -54,6 +52,7 @@ public class ChatClient implements Runnable{
         connectToServer(this.serverHostName, this.serverPort);
         new Thread(this).start();
     }
+
     /**
      * this method gets run when the thread is started
      * it will need to loop for the life of the chatclient
@@ -61,16 +60,12 @@ public class ChatClient implements Runnable{
      */
     @Override
     public void run() {
-        //TODO loop over the messageQ and process it. make sure to forward
-        // incoming messages to the interfaceMessageQ if it needs to be
-        // displayed. If it is an outgoing message send it out the serverConnection
         if (serverConnection.isConnected()) {
             isRunning = true;
             while(isRunning) {
                 takeMessage();
             }
         }
-
         System.out.println("ChatClient is shutting down");
     }
 
@@ -182,8 +177,6 @@ public class ChatClient implements Runnable{
      * @param m shutdown message
      */
     private void shutdown(MShutDown m){
-        //TODO this gets called when a Shutdown message is received it will gracefully close all
-        // connections and the break out of run loop
         isRunning = false;
         serverConnection.sendMessage(m);
         serverConnection.shutdown();
@@ -208,14 +201,23 @@ public class ChatClient implements Runnable{
         }
     }
 
+    /**
+     * Sets the client in research mode
+     */
     public void setResearchMode() {
         this.researchMode = true;
     }
+
 
     public void setResearchMessages(int numChatMsgs)  {
         this.numChatMsgs = numChatMsgs;
     }
 
+
+    /**
+     * Main method to test client
+     * @param args serverhost serverport username interfaceQueue
+     */
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Wrong number of parameters");

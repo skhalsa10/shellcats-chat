@@ -22,18 +22,34 @@ public class MDelayTimes extends Message {
         this.numMsgs = numMsgs;
     }
 
+    /**
+     * Gets the username of the recipient
+     * @return recipient username
+     */
     public String getRecipient() {
         return recipient;
     }
 
+    /**
+     * Gets the username of the sender
+     * @return sender username
+     */
     public String getSender() {
         return sender;
     }
 
+    /**
+     * Gets the list of delay times for each of the 10 messages sent in research mode
+     * @return Array list of delay times
+     */
     public ArrayList<Long> getDelayTimes() {
         return delayTimes;
     }
 
+    /**
+     * Gets the average delay time of the 10 messages
+     * @return average delay time
+     */
     public Long getAvgDelay() {
         return avgDelay;
     }

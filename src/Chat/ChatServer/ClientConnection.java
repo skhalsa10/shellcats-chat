@@ -49,6 +49,10 @@ public class ClientConnection implements Runnable{
         this.username = username;
     }
 
+    /**
+     * this is the threads run function it will read in message object and perform work on them
+     * based on the object and/or forward the message to the server
+     */
     @Override
     public void run() {
         //System.out.println("clientconnection " + username + " running");
@@ -124,6 +128,10 @@ public class ClientConnection implements Runnable{
 
     }
 
+    /**
+     * this will shut down this clientConnection gracefully
+     * @throws IOException
+     */
     public void shutdown() throws IOException {
         //System.out.println("Connection to chat server is shut down");
         try {

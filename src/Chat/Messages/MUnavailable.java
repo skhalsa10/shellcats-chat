@@ -15,7 +15,7 @@ public class MUnavailable extends Message{
 
     /**
      * Gets the username of the sender
-     * @return
+     * @return sender username
      */
     public String getSender() {
         return sender;

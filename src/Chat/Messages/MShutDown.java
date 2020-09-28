@@ -13,7 +13,7 @@ public class MShutDown extends Message{
 
     /**
      * Gets the username of the client who wishes to shut down
-     * @return
+     * @return client username
      */
     public String getUsername() {
         return username;
