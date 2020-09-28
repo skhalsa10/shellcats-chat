@@ -160,7 +160,7 @@ public class ChatServer implements Runnable {
                         if(totalNumDelayMsgs == 0) {
                             int numMsgs = ((MDelayTimes) msg).getNumMsgs();
                             out.print("Recipient,");
-                            for(int i = 0; i <= numMsgs; i++) {
+                            for(int i = 1; i <= numMsgs; i++) {
                                 out.print(Integer.toString(i) + ',');
                             }
                             out.println("Average");
