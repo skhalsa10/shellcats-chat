@@ -44,8 +44,30 @@ public class ChatClientCLI implements Runnable{
     private boolean isRunning;
     private String recipient;
     private CLICommander commander;
+    private boolean researchMode = false;
 
-    static boolean researchMode = false;
+    /**
+     * The constructor for the ChatCLientCLI
+     * @param username the username of the client
+     * @param serverHostName the hostname of the server to connect to
+     * @param serverPort the port the server is listening on
+     */
+    public ChatClientCLI(String username, String serverHostName, int serverPort, boolean researchMode, String recipient, int researchMessages){
+        this.username = username;
+        interfaceMessageQ = new PriorityBlockingQueue<>();
+        this.researchMode = researchMode;
+        this.recipient = recipient;
+        interfaceMessageQ.put(new MSetRecipient(this.recipient));
+        this.chatCLient = new ChatClient(username,serverHostName,serverPort,interfaceMessageQ, recipient,this.researchMode,researchMessages);
+        new Thread(this).start();
+        isRunning = true;
+        if(!researchMode) {
+            this.commander = new CLICommander();
+        }
+        else {
+            System.out.println("the commander did not start");
+        }
+    }
 
     /**
      * The constructor for the ChatCLientCLI
@@ -56,6 +78,7 @@ public class ChatClientCLI implements Runnable{
     public ChatClientCLI(String username, String serverHostName, int serverPort){
         this.username = username;
         interfaceMessageQ = new PriorityBlockingQueue<>();
+        interfaceMessageQ.put(new MSetRecipient(this.recipient));
         this.chatCLient = new ChatClient(username,serverHostName,serverPort,interfaceMessageQ);
         new Thread(this).start();
         isRunning = true;
@@ -135,14 +158,14 @@ public class ChatClientCLI implements Runnable{
         int serverPort = Integer.parseInt(args[2]);
 
         if (args.length == 6 && args[3].equalsIgnoreCase("research")) {
-            researchMode = true;
-            ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
-            clientCLI.chatCLient.setResearchMode();
-            clientCLI.recipient = args[4];
-            clientCLI.chatCLient.setResearchMessages(Integer.parseInt(args[5]));
-            clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
-            System.out.println(clientCLI.researchMode);
-            System.out.println(clientCLI.recipient);
+
+            ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort, true, args[4], Integer.parseInt(args[5]));
+            //clientCLI.chatCLient.setResearchMode();
+            //clientCLI.recipient = args[4];
+            //clientCLI.chatCLient.setResearchMessages(Integer.parseInt(args[5]));
+            //clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
+            //System.out.println(clientCLI.researchMode);
+            //System.out.println(clientCLI.recipient);
 
         }
         else {

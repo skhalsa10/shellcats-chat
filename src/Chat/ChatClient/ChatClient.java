@@ -46,6 +46,26 @@ public class ChatClient implements Runnable{
      * @param serverPort server port number
      * @param interfaceMessageQ message queue for client interface
      */
+    public ChatClient(String username, String serverHostName, int serverPort, PriorityBlockingQueue<Message> interfaceMessageQ, String recipient, boolean researchMode , int researchMessages){
+
+        this.username = username;
+        this.serverHostName = serverHostName;
+        this.serverPort = serverPort;
+        this.interfaceMessageQ = interfaceMessageQ;
+        this.recipient = recipient;
+        this.researchMode = researchMode;
+        this.numChatMsgs = researchMessages;
+        connectToServer(this.serverHostName, this.serverPort);
+        new Thread(this).start();
+    }
+
+    /**
+     * the constructor of the ChatClient. It will initialize everything and then loop
+     * @param username client username
+     * @param serverHostName server hostname
+     * @param serverPort server port number
+     * @param interfaceMessageQ message queue for client interface
+     */
     public ChatClient(String username, String serverHostName, int serverPort, PriorityBlockingQueue<Message> interfaceMessageQ){
 
         this.username = username;
@@ -55,6 +75,7 @@ public class ChatClient implements Runnable{
         connectToServer(this.serverHostName, this.serverPort);
         new Thread(this).start();
     }
+
 
     /**
      * this method gets run when the thread is started
@@ -142,6 +163,7 @@ public class ChatClient implements Runnable{
      */
     private void forwardMessage(MChat m) {
         String recipient = m.getRecipientUsername();
+        System.out.println("the RECIPIENT from the MChat message  IS " + recipient);
         if(recipient.equalsIgnoreCase(username)) {
             if(researchMode) {
                 Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
@@ -234,6 +256,6 @@ public class ChatClient implements Runnable{
             System.out.println("Wrong number of parameters");
         }
         PriorityBlockingQueue q = new PriorityBlockingQueue<Message>();
-        ChatClient client = new ChatClient(args[2], args[0], Integer.parseInt(args[1]), q);
+        //ChatClient client = new ChatClient(args[2], args[0], Integer.parseInt(args[1]), q);
     }
 }

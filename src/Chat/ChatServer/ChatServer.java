@@ -86,15 +86,23 @@ public class ChatServer implements Runnable {
                         //System.out.print(clients.keySet());
 
                         // For research mode: check if total number of clients needed is reached
+
                         if(researchMode && clients.size() == totalNumClients) {
                             //TODO loop through all clients or half the clients???
                             int numSendingClients = totalNumClients/2;
                             for(int i = 1; i <= numSendingClients; i++) {
                                 String sendingClient = "client" + Integer.toString(i);
-                                //System.out.println(sendingClient);
+
                                 ClientConnection cc = clients.get(sendingClient);
+                                System.out.println("can I send you a message? this client is: " + cc);
+                                if(cc == null){
+                                    System.out.println("did this client name never get updated from null? " + Integer.toString(i-1) );
+                                    System.out.println(clients.keySet().contains("Null"+ Integer.toString((i-1))));
+                                }
                                 cc.sendMessage(new MSpam());
                             }
+
+                            //TODO try replacing with for each?
 
                         }
                     }
@@ -195,9 +203,9 @@ public class ChatServer implements Runnable {
         }
         catch (Exception e)
         {
-            System.out.println("SERVERMESSAGEQ is " + serverMessageQ);
+            //System.out.println("SERVERMESSAGEQ is " + serverMessageQ);
             System.out.println("catching error in processing messages in ChatServer Run");
-            System.err.println(e.getCause());
+            e.printStackTrace();
         }
 
         }
