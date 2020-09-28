@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.stream.IntStream;
 
 /**
  * This class is a simple server class it brokers clients connections  and then forwards messages to them
@@ -135,7 +136,12 @@ public class ChatServer implements Runnable {
                          BufferedWriter bw = new BufferedWriter(fw);
                          PrintWriter out = new PrintWriter(bw);) {
                         if(totalNumDelayMsgs == 0) {
-                            out.println("Recipient,1,2,3,4,5,6,7,8,9,10,Average");
+                            int numMsgs = ((MDelayTimes) msg).getNumMsgs();
+                            out.print("Recipient,");
+                            for(int i = 0; i <= numMsgs; i++) {
+                                out.print(Integer.toString(i) + ',');
+                            }
+                            out.println("Average");
                         }
                         out.print(((MDelayTimes) msg).getRecipient() + ",");
                         for (Long t : ((MDelayTimes) msg).getDelayTimes()) {

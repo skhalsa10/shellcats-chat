@@ -118,7 +118,7 @@ public class ChatClient implements Runnable{
             this.recipient = ((MSetRecipient) m).getRecipient();
         }
         else if (m instanceof MSpam) {
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i < numChatMsgs; i++) {
                 MChat msg = new MChat(username, recipient, "Spam? To make spam musubi???");
                 interfaceMessageQ.put(msg);
             }
@@ -149,15 +149,15 @@ public class ChatClient implements Runnable{
                 long delay = Math.abs(duration.getNano());
                 //System.out.println(delay);
                 delayTimes.add(delay);
-                if(delayTimes.size() == 10) {
+                if(delayTimes.size() == numChatMsgs) {
                     //System.out.println("all messages received in research mode!!!");
                     long total = 0;
                     for(Long i : delayTimes) {
                         total += i;
                     }
-                    long avgDelay = total/10;
+                    long avgDelay = total/numChatMsgs;
                     MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(),
-                                        delayTimes, avgDelay);
+                                        delayTimes, avgDelay, numChatMsgs);
                     serverConnection.sendMessage(msg);
                 }
             }
@@ -210,6 +210,10 @@ public class ChatClient implements Runnable{
 
     public void setResearchMode() {
         this.researchMode = true;
+    }
+
+    public void setResearchMessages(int numChatMsgs)  {
+        this.numChatMsgs = numChatMsgs;
     }
 
     public static void main(String[] args) {

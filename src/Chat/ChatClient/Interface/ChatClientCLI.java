@@ -125,7 +125,7 @@ public class ChatClientCLI implements Runnable{
     public static void main(String[] args){
         //todo add a research flag that helps automate some research
 
-        if(args.length != 3 && args.length != 5){
+        if(args.length != 3 && args.length != 6){
             PrintInstructions();
             return;
         }
@@ -133,11 +133,12 @@ public class ChatClientCLI implements Runnable{
         String serverHost = args[1];
         int serverPort = Integer.parseInt(args[2]);
 
-        if (args.length == 5 && args[3].equalsIgnoreCase("research")) {
+        if (args.length == 6 && args[3].equalsIgnoreCase("research")) {
             researchMode = true;
             ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort);
             clientCLI.chatCLient.setResearchMode();
             clientCLI.recipient = args[4];
+            clientCLI.chatCLient.setResearchMessages(Integer.parseInt(args[5]));
             clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
             //System.out.println(clientCLI.researchMode);
             //System.out.println(clientCLI.recipient);
