@@ -241,7 +241,16 @@ public class ChatServer implements Runnable {
     public static void main(String[] args){
         if (args.length != 2 && args.length != 4 && args.length != 6)
         {
-            System.out.println("Wrong number of parameters");
+            System.out.println("Instructions:\n" +
+                    "We can run the server in two seperate modes. Regular and Research. \n" +
+                    "REGULAR mode instructions:\n" +
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number]\n" +
+                    "\n" +
+                    "RESEARCH mode instructions1: \n" +
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] [research] [total clients needed]\n\n" +
+                    "RESEARCH mode instructions2: \n" +
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] [research] [total clients needed] [RTT(name).csv] [SenderToReceiver(name).csv] ");
+            return;
         }
         ChatServer chatServer=new ChatServer(args[0], Integer.parseInt(args[1]));
         if(args.length >= 4 && args[2].equalsIgnoreCase("research")) {
@@ -253,6 +262,16 @@ public class ChatServer implements Runnable {
                 chatServer.logFileName = args[4];
                 chatServer.logFileNameServer = args[5];
             }
+        }
+        else {
+            System.out.println("Instructions:\n" +
+                    "We can run the server in two seperate modes. Regular and Research. \n" +
+                    "REGULAR mode instructions:\n" +
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number]\n" +
+                    "\n" +
+                    "RESEARCH mode instructions: \n" +
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] [research] [total clients needed]");
+            return;
         }
 
     }

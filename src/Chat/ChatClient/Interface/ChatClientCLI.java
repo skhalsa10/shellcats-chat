@@ -77,6 +77,7 @@ public class ChatClientCLI implements Runnable{
                 Message m = interfaceMessageQ.take();
                 if(m instanceof MSetRecipient){
                     this.recipient = ((MSetRecipient) m).getRecipient();
+                    System.out.println("is the chatclient null? " + chatCLient);
                     chatCLient.sendMessage(m);
                     System.out.println(ANSI_GREEN + "PROCESSED COMMAND:setRecipient " + ANSI_RESET);
                 }else if(m instanceof MChat){
