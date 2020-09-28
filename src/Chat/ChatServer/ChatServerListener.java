@@ -43,14 +43,14 @@ public class ChatServerListener implements Runnable {
         while(isRunning) {
             try {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("accepting new socket on chat server");
+                //System.out.println("accepting new socket on chat server");
                 ClientConnection clientConnection = new ClientConnection("Null" + Long.toString(counter), clientSocket, serverMessageQ);
-                System.out.println("serverlistener created new clientconenction");
+                //System.out.println("serverlistener created new clientconenction");
                 clients.put("Null" + Long.toString(counter), clientConnection);
                 counter++;
                 Thread thread = new Thread(clientConnection);
                 thread.start();
-                System.out.println("Client connected!");
+                //System.out.println("Client connected!");
                 RequestUsername usernameMsg = new RequestUsername();
                 clientConnection.sendMessage(usernameMsg);
 

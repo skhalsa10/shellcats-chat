@@ -51,7 +51,7 @@ public class ClientConnection implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("clientconnection " + username + " running");
+        //System.out.println("clientconnection " + username + " running");
         Message receivedMessage;
         while(serverConnected) {
             try {
@@ -61,7 +61,7 @@ public class ClientConnection implements Runnable{
                     if (receivedMessage instanceof ClientUserName) {
                         ((ClientUserName) receivedMessage).setTempUserName(this.username);
                         this.setUsername(((ClientUserName) receivedMessage).getUserName());
-                        System.out.println(((ClientUserName) receivedMessage).getUserName());
+                        //System.out.println(((ClientUserName) receivedMessage).getUserName());
                         serverMessageQ.put((receivedMessage));
                     }
                     else if(receivedMessage instanceof MShutDown){
@@ -125,7 +125,6 @@ public class ClientConnection implements Runnable{
     }
 
     public void shutdown() throws IOException {
-        //todo the server may initiate a shutdown and
         //System.out.println("Connection to chat server is shut down");
         try {
             out.close();

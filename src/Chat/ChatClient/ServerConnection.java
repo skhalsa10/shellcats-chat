@@ -60,7 +60,6 @@ public class ServerConnection implements Runnable{
                     clientMessageQ.put(receivedMessage);
                 }
                 else {
-                    //TODO make this into an error...forgot how to do that...
                     System.out.println("not a Message!!!");
                 }
 
@@ -81,7 +80,7 @@ public class ServerConnection implements Runnable{
     public void sendMessage(Message m){
         try {
             out.writeObject(m);
-            System.out.println("message sent through serverConnection");
+            //System.out.println("message sent through serverConnection");
         }
         catch(Exception e) {
             System.err.println(e);

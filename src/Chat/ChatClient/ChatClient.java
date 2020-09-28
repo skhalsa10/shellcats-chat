@@ -103,7 +103,7 @@ public class ChatClient implements Runnable{
         }
         else if (m instanceof RequestUsername) {
             sendUsername();
-            System.out.println("RequestUsername message received");
+            //System.out.println("RequestUsername message received");
         }
         else if (m instanceof MUnavailable) {
             String recipient = ((MUnavailable) m).getRecipient();
@@ -147,10 +147,10 @@ public class ChatClient implements Runnable{
             if(researchMode) {
                 Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
                 long delay = Math.abs(duration.getNano());
-                System.out.println(delay);
+                //System.out.println(delay);
                 delayTimes.add(delay);
                 if(delayTimes.size() == 10) {
-                    System.out.println("all messages received in research mode!!!");
+                    //System.out.println("all messages received in research mode!!!");
                     long total = 0;
                     for(Long i : delayTimes) {
                         total += i;

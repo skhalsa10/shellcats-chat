@@ -57,7 +57,7 @@ public class ChatServer implements Runnable {
         {
             try {
                 Message msg = serverMessageQ.take();
-                System.out.println(msg);
+                //System.out.println(msg);
                 if (msg instanceof ClientUserName)
                 {
                     ClientUserName clientMsg = (ClientUserName) msg;
@@ -83,7 +83,7 @@ public class ChatServer implements Runnable {
                             int numSendingClients = totalNumClients/2;
                             for(int i = 1; i <= numSendingClients; i++) {
                                 String sendingClient = "client" + Integer.toString(i);
-                                System.out.println(sendingClient);
+                                //System.out.println(sendingClient);
                                 ClientConnection cc = clients.get(sendingClient);
                                 cc.sendMessage(new MSpam());
                             }
@@ -93,7 +93,7 @@ public class ChatServer implements Runnable {
 
                 }
                 else if (msg instanceof MChat) {
-                    System.out.println("Server is processing MCHAT");
+                    //System.out.println("Server is processing MCHAT");
                     String recipient = ((MChat) msg).getRecipientUsername();
                     if (clients.containsKey(recipient)) {
                         ClientConnection clientConnection = clients.get(recipient);
@@ -122,15 +122,15 @@ public class ChatServer implements Runnable {
                         ClientConnection clientConnection = clients.get(sender);
                         clientConnection.sendMessage(m);
                     }
-                    System.out.println("Message Failed to send to " + m2.getOriginalDestination());
+                    //System.out.println("Message Failed to send to " + m2.getOriginalDestination());
                 }
                 else if(msg instanceof MDelayTimes) {
-                    System.out.println("delay recipient " + ((MDelayTimes) msg).getRecipient());
-                    System.out.println("delay sender " + ((MDelayTimes) msg).getSender());
-                    System.out.println("delay avg " + ((MDelayTimes) msg).getAvgDelay());
-                    for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
+                    //System.out.println("delay recipient " + ((MDelayTimes) msg).getRecipient());
+                    //System.out.println("delay sender " + ((MDelayTimes) msg).getSender());
+                    //System.out.println("delay avg " + ((MDelayTimes) msg).getAvgDelay());
+                    /*for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
                         System.out.println("delay time: " + Long.toString(i));
-                    }
+                    }*/
                     try (FileWriter fw = new FileWriter(logFileName, true);
                          BufferedWriter bw = new BufferedWriter(fw);
                          PrintWriter out = new PrintWriter(bw);) {
@@ -149,7 +149,7 @@ public class ChatServer implements Runnable {
                     totalNumDelayMsgs++;
                     if(totalNumDelayMsgs == totalNumClients/2) {
                         for(String c : clients.keySet()) {
-                            System.out.println("this be the client name " + c);
+                            //System.out.println("this be the client name " + c);
                             ClientConnection cc = clients.get(c);
                             cc.sendMessage(new MStopResearch());
                         }
@@ -172,11 +172,9 @@ public class ChatServer implements Runnable {
 
     }
 
-    //TODO build a shutdown method to gracefull close ALL client connections
-    // and then shut down the listener and then shutdown its own thread
+
     public void shutdown()
     {
-        //TODO close all sockets and shutdown the thread gracefully
         System.out.println("Processing shutdown ");
         try {
             System.out.println("shutting down remaining clients");
