@@ -54,6 +54,9 @@ public class ChatServer implements Runnable {
         thread2.start();
     }
 
+    /**
+     * this is the run function for the thread of the server that processes messages
+     */
     @Override
     public void run() {
 
@@ -80,7 +83,7 @@ public class ChatServer implements Runnable {
                         }
                         //place it into the clients with correct key
                         clients.put(clientMsg.getUserName(), clientConnection);
-                        System.out.print(clients.keySet());
+                        //System.out.print(clients.keySet());
 
                         // For research mode: check if total number of clients needed is reached
                         if(researchMode && clients.size() == totalNumClients) {
@@ -200,7 +203,9 @@ public class ChatServer implements Runnable {
 
     }
 
-
+    /**
+     * this will shutdown the server gracefully
+     */
     public void shutdown()
     {
         System.out.println("Processing shutdown ");
@@ -228,6 +233,11 @@ public class ChatServer implements Runnable {
 
 
     }
+
+    /**
+     * this main function is used to start the server
+     * @param args
+     */
     public static void main(String[] args){
         if (args.length != 2 && args.length != 4 && args.length != 6)
         {

@@ -123,7 +123,6 @@ public class ChatClientCLI implements Runnable{
      * @param args - this should contain String username, String serverHostname, and int ServerPort
      */
     public static void main(String[] args){
-        //todo add a research flag that helps automate some research
 
         if(args.length != 3 && args.length != 6){
             PrintInstructions();
@@ -152,6 +151,10 @@ public class ChatClientCLI implements Runnable{
 
     }
 
+    /**
+     * this is a nested class that listens for commends on standard in
+     * this is not needed in research mode and is only started with human input
+     */
     class CLICommander implements Runnable{
         private boolean CLICommanderRunning;
         private Scanner scanner;
@@ -164,11 +167,14 @@ public class ChatClientCLI implements Runnable{
             CLICommanderRunning = true;
         }
 
+        /**
+         * this thread will take in a line from standard in. if it is a command it
+         * processes the command if it is nto a command it will send a message with the text.
+         */
         @Override
         public void run() {
             while(CLICommanderRunning){
                 String line = scanner.nextLine();
-                //TODO here we need to check the line has any commands COMMAND:setRecipient...
                 if((line.length()>7)&&line.substring(0,7).equals("COMMAND")){
                     String[] parsedCommand = line.split(" ");
                     //process commands
@@ -191,11 +197,12 @@ public class ChatClientCLI implements Runnable{
             }
 
             System.out.println("Leaving the Commander!");
-
         }
+
     }
 
     private static void PrintInstructions() {
         System.out.println("Learn how to use this :)");
     }
+
 }

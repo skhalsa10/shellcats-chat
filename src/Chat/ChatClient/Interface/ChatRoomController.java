@@ -22,6 +22,9 @@ import java.sql.Timestamp;
 import java.util.Scanner;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ * this class is the controller for the chat room gui
+ */
 public class ChatRoomController {
 
     private String clientUsername;
@@ -82,6 +85,11 @@ public class ChatRoomController {
         client.sendMessage(m);
         clientMessage.clear();
     }
+
+    /**
+     * this allows user to press enter to also send message rather than just pressing the send button.
+     * @param keyEvent
+     */
     @FXML
     public void handleEnterKey(KeyEvent keyEvent) {
         if(keyEvent.getCode() == KeyCode.ENTER){

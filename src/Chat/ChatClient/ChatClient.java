@@ -37,6 +37,8 @@ public class ChatClient implements Runnable{
     private boolean researchMode = false;
     private int numChatMsgs = 0;
     private ArrayList<Long> delayTimes = new ArrayList<>() ;
+
+
     /**
      * the constructor of the ChatClient. It will initialize everything and then loop
      * @param username client username
@@ -209,6 +211,10 @@ public class ChatClient implements Runnable{
     }
 
 
+    /**
+     * this will set the number of messages to be send in researchmode
+     * @param numChatMsgs
+     */
     public void setResearchMessages(int numChatMsgs)  {
         this.numChatMsgs = numChatMsgs;
     }
