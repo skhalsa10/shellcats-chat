@@ -112,6 +112,7 @@ public class ChatClientCLI implements Runnable{
 
 
             } catch (InterruptedException e) {
+                System.out.println("error in chatclientCLI run to process messages");
                 e.printStackTrace();
             }
         }
@@ -140,8 +141,8 @@ public class ChatClientCLI implements Runnable{
             clientCLI.recipient = args[4];
             clientCLI.chatCLient.setResearchMessages(Integer.parseInt(args[5]));
             clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
-            //System.out.println(clientCLI.researchMode);
-            //System.out.println(clientCLI.recipient);
+            System.out.println(clientCLI.researchMode);
+            System.out.println(clientCLI.recipient);
 
         }
         else {

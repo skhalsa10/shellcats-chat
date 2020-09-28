@@ -195,8 +195,9 @@ public class ChatServer implements Runnable {
         }
         catch (Exception e)
         {
+            System.out.println("SERVERMESSAGEQ is " + serverMessageQ);
             System.out.println("catching error in processing messages in ChatServer Run");
-            System.err.println(e);
+            System.err.println(e.getCause());
         }
 
         }

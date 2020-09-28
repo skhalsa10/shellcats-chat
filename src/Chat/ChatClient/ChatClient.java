@@ -47,6 +47,7 @@ public class ChatClient implements Runnable{
      * @param interfaceMessageQ message queue for client interface
      */
     public ChatClient(String username, String serverHostName, int serverPort, PriorityBlockingQueue<Message> interfaceMessageQ){
+
         this.username = username;
         this.serverHostName = serverHostName;
         this.serverPort = serverPort;
@@ -82,6 +83,7 @@ public class ChatClient implements Runnable{
         }
         catch(Exception e) {
             System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -195,10 +197,13 @@ public class ChatClient implements Runnable{
         try {
             Socket socket = new Socket(serverHostName, serverPort);
             this.messageQ = new PriorityBlockingQueue<Message>();
+            System.out.println("socket is connected?" + socket.isConnected());
             serverConnection = new ServerConnection(socket, messageQ);
             new Thread(serverConnection).start();
         }
         catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("error connecting to server");
             System.err.println(e);
         }
     }
