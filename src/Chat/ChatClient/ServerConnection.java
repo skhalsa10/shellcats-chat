@@ -60,9 +60,11 @@ public class ServerConnection implements Runnable{
 
             }
             catch(IOException e) {
+                connected = false;
                 System.out.println("Chat Server connection is closed");
             }
             catch(Exception e) {
+                connected = false;
                 System.err.println(e);
             }
         }

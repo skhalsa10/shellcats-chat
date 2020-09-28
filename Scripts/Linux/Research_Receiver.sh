@@ -16,6 +16,7 @@ printf -v ChatCLI "$(pwd)/../../jars/ChatCLI.jar"
 
 for (( i=1; i<=$((clients/2)); i++ ))
     do
+        ## 73.42.106.175
         ##/usr/bin/java -jar $ChatCLI client${i} localhost 8558 research client$((clients -(2-1)))&
-        ${path} -jar $ChatCLI client$((clients -(${i}-1))) 73.42.106.175 8558 research client${i} ${messages}&
+        ${path} -jar $ChatCLI client$((clients -(${i}-1))) localhost 8558 research client${i} ${messages}&
 done
