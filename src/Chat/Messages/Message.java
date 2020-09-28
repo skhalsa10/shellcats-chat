@@ -27,6 +27,11 @@ public abstract class Message implements Comparable<Message> , Serializable {
         return this.timeStamp;
     }
 
+    /**
+     * this is used when comparing order so messages can be used in a priorityQueue
+     * @param o object to compare with
+     * @return
+     */
     @Override
     public int compareTo(Message o) {
         return this.getTimeStamp().compareTo(o.getTimeStamp());

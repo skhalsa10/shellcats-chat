@@ -8,10 +8,14 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
-// This is Soheila
+
 /**
  * This class has one small purpose listen for new socket connections add them
  * to the clientConnection map/list so the server can use it later
+ *
+ * @author Soheila
+ * @author Siri performed skeletons
+ * @version 1.0
  */
 
 public class ChatServerListener implements Runnable {
@@ -25,6 +29,12 @@ public class ChatServerListener implements Runnable {
     private boolean isRunning;
 
 
+    /**
+     * construct a new ChatServer Listener
+     * @param serverSocket takes a server socket that class will listen on
+     * @param clients a map containing all clients
+     * @param serverMessageQ the server message queue to send messages to the sender
+     */
     public ChatServerListener(ServerSocket serverSocket, ConcurrentHashMap<String,ClientConnection> clients, PriorityBlockingQueue<Message> serverMessageQ){
         this.clients=clients;
         this.serverSocket=serverSocket;
@@ -42,6 +52,7 @@ public class ChatServerListener implements Runnable {
         isRunning = true;
         while(isRunning) {
             try {
+
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("accepting new socket on chat server");
                 ClientConnection clientConnection = new ClientConnection("Null" + Long.toString(counter), clientSocket, serverMessageQ);
