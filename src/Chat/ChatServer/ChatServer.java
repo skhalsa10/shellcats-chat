@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,7 +32,9 @@ public class ChatServer implements Runnable {
     private boolean researchMode = false;
     private int totalNumClients = 0;
     private int totalNumDelayMsgs = 0;
-    private String logFileName = "log.csv";
+    private String logFileName = "logC2C.csv";
+    private String logFileNameServer = "logC2S.csv";
+    private int totalMChatMsgs = 0;
 
     public ChatServer(String serverHostname, int serverport){
         this.serverHostname=serverHostname;
@@ -96,6 +100,24 @@ public class ChatServer implements Runnable {
                 else if (msg instanceof MChat) {
                     //System.out.println("Server is processing MCHAT");
                     String recipient = ((MChat) msg).getRecipientUsername();
+                    if(researchMode) {
+                        try (FileWriter fw = new FileWriter(logFileNameServer, true);
+                             BufferedWriter bw = new BufferedWriter(fw);
+                             PrintWriter out = new PrintWriter(bw);) {
+
+                            if(totalMChatMsgs == 0) {
+                                out.println("Sender,Time");
+                            }
+                            out.print(((MChat) msg).getSenderUsername() + ",");
+                            Duration duration = Duration.between(LocalDateTime.now(), msg.getTimeStamp());
+                            long delay = Math.abs(duration.getNano());
+                            out.println(delay);
+                        }
+                        catch (IOException e) {
+                            System.err.println(e);
+                        }
+                    }
+                    totalMChatMsgs++;
                     if (clients.containsKey(recipient)) {
                         ClientConnection clientConnection = clients.get(recipient);
                         clientConnection.sendMessage(msg);
@@ -207,7 +229,7 @@ public class ChatServer implements Runnable {
 
     }
     public static void main(String[] args){
-        if (args.length != 2 && args.length != 4 && args.length != 5)
+        if (args.length != 2 && args.length != 4 && args.length != 6)
         {
             System.out.println("Wrong number of parameters");
         }
@@ -217,8 +239,9 @@ public class ChatServer implements Runnable {
             chatServer.totalNumClients = Integer.parseInt(args[3]);
             System.out.println(chatServer.researchMode);
             System.out.println(chatServer.totalNumClients);
-            if(args.length == 5) {
+            if(args.length == 6) {
                 chatServer.logFileName = args[4];
+                chatServer.logFileNameServer = args[5];
             }
         }
 
