@@ -73,7 +73,7 @@ public class ChatServer implements Runnable {
                     if(clients.containsKey(clientMsg.getUserName())) {
                        String clientName = clientMsg.getTempUserName();
                        ClientConnection clientConnection = clients.get(clientName);
-                       MUsernameExists m = new MUsernameExists(clientMsg.getUserName());
+                       MUsernameExists m = new MUsernameExists(clientMsg.getUserName(), clientName);
                        clientConnection.sendMessage(m);
                     }
                     else {

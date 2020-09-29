@@ -136,6 +136,8 @@ public class ChatClient implements Runnable{
         else if(m instanceof MUsernameExists) {
             System.out.println(((MUsernameExists) m).getMsg());
             interfaceMessageQ.put(m);
+            this.username = ((MUsernameExists) m).getTempName();
+            interfaceMessageQ.put(new MShutDown(username));
         }
         else if (m instanceof MSetRecipient) {
             this.recipient = ((MSetRecipient) m).getRecipient();
