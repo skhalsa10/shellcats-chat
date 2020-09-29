@@ -31,6 +31,7 @@ public class ChatServer implements Runnable {
 
     private boolean researchMode = false;
     private int totalNumClients = 0;
+    private int countClients = 0;
     private int totalNumDelayMsgs = 0;
     private String logFileName = "logC2C.csv";
     private String logFileNameServer = "logC2S.csv";
@@ -83,11 +84,12 @@ public class ChatServer implements Runnable {
                         }
                         //place it into the clients with correct key
                         clients.put(clientMsg.getUserName(), clientConnection);
+                        countClients++;
                         //System.out.print(clients.keySet());
 
                         // For research mode: check if total number of clients needed is reached
 
-                        if(researchMode && clients.size() == totalNumClients) {
+                        if(researchMode && countClients == totalNumClients) {
                             //TODO loop through all clients or half the clients???
                             int numSendingClients = totalNumClients/2;
                             for(int i = 1; i <= numSendingClients; i++) {
