@@ -84,7 +84,10 @@ public class ChatClient implements Runnable{
      */
     @Override
     public void run() {
-        if (serverConnection.isConnected()) {
+        if(serverConnection == null) {
+            interfaceMessageQ.put(new MShutDown(username));
+        }
+        else if (serverConnection.isConnected()) {
             isRunning = true;
             while(isRunning) {
                 takeMessage();
@@ -154,7 +157,9 @@ public class ChatClient implements Runnable{
      */
     private void sendUsername() {
         ClientUserName m = new ClientUserName(username);
-        serverConnection.sendMessage(m);
+        if(serverConnection != null) {
+            serverConnection.sendMessage(m);
+        }
     }
 
     /**
@@ -179,13 +184,17 @@ public class ChatClient implements Runnable{
                     long avgDelay = total/numChatMsgs;
                     MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(),
                                         delayTimes, avgDelay, numChatMsgs);
-                    serverConnection.sendMessage(msg);
+                    if(serverConnection != null) {
+                        serverConnection.sendMessage(msg);
+                    }
                 }
             }
             interfaceMessageQ.put(m);
         }
         else {
-            serverConnection.sendMessage(m);
+            if(serverConnection != null) {
+                serverConnection.sendMessage(m);
+            }
         }
     }
 
@@ -194,7 +203,9 @@ public class ChatClient implements Runnable{
      * @param m message to be placed in the queue
      */
     public void sendMessage(Message m){
-        messageQ.put(m);
+        if(messageQ != null) {
+            messageQ.put(m);
+        }
     }
 
     /**
@@ -204,8 +215,11 @@ public class ChatClient implements Runnable{
      */
     private void shutdown(MShutDown m){
         isRunning = false;
-        serverConnection.sendMessage(m);
-        serverConnection.shutdown();
+        if(serverConnection != null) {
+            serverConnection.sendMessage(m);
+            serverConnection.shutdown();
+        }
+
 
     }
 
@@ -224,9 +238,9 @@ public class ChatClient implements Runnable{
             new Thread(serverConnection).start();
         }
         catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             System.out.println("error connecting to server");
-            System.err.println(e);
+//            System.err.println(e);
         }
     }
 
