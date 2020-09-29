@@ -126,6 +126,7 @@ public class ChatRoomController {
                     if (incomingMessage instanceof MShutDown){
                         GUICommanderRunning = false;
                         client.sendMessage(incomingMessage);
+                        System.exit(0);
                     }
                     if (incomingMessage instanceof MUnavailable){
                         messageLog.appendText("The recipient client is unavailable.\n");
