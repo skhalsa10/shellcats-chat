@@ -70,12 +70,14 @@ public class ChatServer implements Runnable {
                 if (msg instanceof ClientUserName)
                 {
                     ClientUserName clientMsg = (ClientUserName) msg;
+                    //if the username exists
                     if(clients.containsKey(clientMsg.getUserName())) {
                        String clientName = clientMsg.getTempUserName();
                        ClientConnection clientConnection = clients.get(clientName);
                        MUsernameExists m = new MUsernameExists(clientMsg.getUserName(), clientName);
                        clientConnection.sendMessage(m);
                     }
+                    //if the username does not yet exist
                     else {
                         //remove clientconenction with wrong key and store it temporarily
                         ClientConnection clientConnection = clients.remove(clientMsg.getTempUserName());
@@ -85,6 +87,7 @@ public class ChatServer implements Runnable {
                         //place it into the clients with correct key
                         clients.put(clientMsg.getUserName(), clientConnection);
                         countClients++;
+                        System.out.println("Client Count is at " +countClients);
                         //System.out.print(clients.keySet());
 
                         // For research mode: check if total number of clients needed is reached
