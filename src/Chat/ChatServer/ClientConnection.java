@@ -98,12 +98,13 @@ public class ClientConnection implements Runnable{
             }
             catch(IOException e) {
                 System.out.println("woeh woeh woeh there hold your horses and check client connection run");
+                e.printStackTrace();
                 System.err.println(e);
                 serverConnected = false;
             }
             catch(Exception e) {
-
                 System.err.println(e);
+                e.printStackTrace();
                 serverConnected = false;
             }
 
