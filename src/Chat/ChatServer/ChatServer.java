@@ -191,6 +191,7 @@ public class ChatServer implements Runnable {
                         System.err.println(e);
                     }
                     totalNumDelayMsgs++;
+                    System.out.println("totalNumDelayMsgs is " + totalNumDelayMsgs);
                     if(totalNumDelayMsgs == totalNumClients/2) {
                         for(String c : clients.keySet()) {
                             //System.out.println("this be the client name " + c);
