@@ -11,7 +11,7 @@ echo "Enter the number of messages a client will send"
 read messages
 
 ##build a variable to use that point to the client to run
-printf -v ChatCLI "$(pwd)/../../jars/ChatCLI.jar"
+printf -v ChatCLI "$(pwd)/../../../jars/ChatCLI.jar"
 ## loop on input number of clients
 
 addto=$((clients/4))
