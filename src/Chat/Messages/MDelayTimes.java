@@ -39,7 +39,7 @@ public class MDelayTimes extends Message {
     }
 
     /**
-     * Gets the list of delay times for each of the 10 messages sent in research mode
+     * Gets the list of delay times for each of the messages sent in research mode
      * @return Array list of delay times
      */
     public ArrayList<Long> getDelayTimes() {
@@ -47,13 +47,17 @@ public class MDelayTimes extends Message {
     }
 
     /**
-     * Gets the average delay time of the 10 messages
+     * Gets the average delay time of the messages
      * @return average delay time
      */
     public Long getAvgDelay() {
         return avgDelay;
     }
 
+    /**
+     * Gets the total number of messages that each sender client is supposed to send
+     * @return number of messages
+     */
     public int getNumMsgs() {
         return numMsgs;
     }

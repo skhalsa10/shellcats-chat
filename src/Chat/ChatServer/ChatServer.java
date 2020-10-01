@@ -66,7 +66,6 @@ public class ChatServer implements Runnable {
         {
             try {
                 Message msg = serverMessageQ.take();
-                //System.out.println(msg);
                 if (msg instanceof ClientUserName)
                 {
                     ClientUserName clientMsg = (ClientUserName) msg;
@@ -88,12 +87,10 @@ public class ChatServer implements Runnable {
                         clients.put(clientMsg.getUserName(), clientConnection);
                         countClients++;
                         System.out.println("Client Count is at " +countClients);
-                        //System.out.print(clients.keySet());
 
                         // For research mode: check if total number of clients needed is reached
 
                         if(researchMode && countClients == totalNumClients) {
-                            //TODO loop through all clients or half the clients???
                             int numSendingClients = totalNumClients/2;
                             for(int i = 1; i <= numSendingClients; i++) {
                                 String sendingClient = "client" + Integer.toString(i);
@@ -106,15 +103,11 @@ public class ChatServer implements Runnable {
                                 }
                                 cc.sendMessage(new MSpam());
                             }
-
-                            //TODO try replacing with for each?
-
                         }
                     }
 
                 }
                 else if (msg instanceof MChat) {
-                    //System.out.println("Server is processing MCHAT");
                     String recipient = ((MChat) msg).getRecipientUsername();
                     if(researchMode) {
                         try (FileWriter fw = new FileWriter(logFileNameServer, true);
@@ -161,15 +154,8 @@ public class ChatServer implements Runnable {
                         ClientConnection clientConnection = clients.get(sender);
                         clientConnection.sendMessage(m);
                     }
-                    //System.out.println("Message Failed to send to " + m2.getOriginalDestination());
                 }
                 else if(msg instanceof MDelayTimes) {
-                    //System.out.println("delay recipient " + ((MDelayTimes) msg).getRecipient());
-                    //System.out.println("delay sender " + ((MDelayTimes) msg).getSender());
-                    //System.out.println("delay avg " + ((MDelayTimes) msg).getAvgDelay());
-                    /*for (Long i : ((MDelayTimes) msg).getDelayTimes()) {
-                        System.out.println("delay time: " + Long.toString(i));
-                    }*/
                     try (FileWriter fw = new FileWriter(logFileName, true);
                          BufferedWriter bw = new BufferedWriter(fw);
                          PrintWriter out = new PrintWriter(bw);) {
@@ -194,7 +180,6 @@ public class ChatServer implements Runnable {
                     System.out.println("totalNumDelayMsgs is " + totalNumDelayMsgs);
                     if(totalNumDelayMsgs == totalNumClients/2) {
                         for(String c : clients.keySet()) {
-                            //System.out.println("this be the client name " + c);
                             ClientConnection cc = clients.get(c);
                             cc.sendMessage(new MStopResearch());
                         }
@@ -209,7 +194,6 @@ public class ChatServer implements Runnable {
         }
         catch (Exception e)
         {
-            //System.out.println("SERVERMESSAGEQ is " + serverMessageQ);
             System.out.println("catching error in processing messages in ChatServer Run");
             e.printStackTrace();
         }

@@ -11,7 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 /**
  * this class encapsulates teh socket communication that the client has with the server.
  *
- * @author put name here
+ * @author Michelle Louie
  * @author Siri wrote the skeleton
  *
  * @version 1.0
@@ -77,7 +77,6 @@ public class ServerConnection implements Runnable{
     public void sendMessage(Message m){
         try {
             out.writeObject(m);
-            //System.out.println("message sent through serverConnection");
         }
         catch(Exception e) {
             System.err.println(e);

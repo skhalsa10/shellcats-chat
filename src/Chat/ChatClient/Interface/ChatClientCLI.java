@@ -124,8 +124,6 @@ public class ChatClientCLI implements Runnable{
                     System.out.println(ANSI_RED + "Recipient " + ((MUnavailable) m).getRecipient() + " is not available."+ ANSI_RESET);
                 }
                 else if(m instanceof MStopResearch) {
-                    //System.out.println("stop the research!!!!");
-                    //System.out.println("i am the user " + username);
                     interfaceMessageQ.put(new MShutDown(username));
                 }
                 else{
@@ -160,12 +158,6 @@ public class ChatClientCLI implements Runnable{
         if (args.length == 6 && args[3].equalsIgnoreCase("research")) {
 
             ChatClientCLI clientCLI = new ChatClientCLI(username,serverHost,serverPort, true, args[4], Integer.parseInt(args[5]));
-            //clientCLI.chatCLient.setResearchMode();
-            //clientCLI.recipient = args[4];
-            //clientCLI.chatCLient.setResearchMessages(Integer.parseInt(args[5]));
-            //clientCLI.interfaceMessageQ.put(new MSetRecipient(clientCLI.recipient));
-            //System.out.println(clientCLI.researchMode);
-            //System.out.println(clientCLI.recipient);
 
         }
         else {

@@ -126,7 +126,6 @@ public class ChatClient implements Runnable{
         }
         else if (m instanceof RequestUsername) {
             sendUsername();
-            //System.out.println("RequestUsername message received");
         }
         else if (m instanceof MUnavailable) {
             String recipient = ((MUnavailable) m).getRecipient();
@@ -172,13 +171,12 @@ public class ChatClient implements Runnable{
         String recipient = m.getRecipientUsername();
         System.out.println("the RECIPIENT from the MChat message  IS " + recipient);
         if(recipient.equalsIgnoreCase(username)) {
+            // in research mode record the time it took for the message to arrive
             if(researchMode) {
                 Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
                 long delay = Math.abs(duration.getNano());
-                //System.out.println(delay);
                 delayTimes.add(delay);
                 if(delayTimes.size() == numChatMsgs) {
-                    //System.out.println("all messages received in research mode!!!");
                     long total = 0;
                     for(Long i : delayTimes) {
                         total += i;
@@ -246,32 +244,4 @@ public class ChatClient implements Runnable{
         }
     }
 
-    /**
-     * Sets the client in research mode
-     */
-    public void setResearchMode() {
-        this.researchMode = true;
-    }
-
-
-    /**
-     * this will set the number of messages to be send in researchmode
-     * @param numChatMsgs
-     */
-    public void setResearchMessages(int numChatMsgs)  {
-        this.numChatMsgs = numChatMsgs;
-    }
-
-
-    /**
-     * Main method to test client
-     * @param args serverhost serverport username interfaceQueue
-     */
-    public static void main(String[] args) {
-        if (args.length != 3) {
-            System.out.println("Wrong number of parameters");
-        }
-        PriorityBlockingQueue q = new PriorityBlockingQueue<Message>();
-        //ChatClient client = new ChatClient(args[2], args[0], Integer.parseInt(args[1]), q);
-    }
 }
