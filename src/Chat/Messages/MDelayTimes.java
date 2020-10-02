@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public class MDelayTimes extends Message {
     private String sender;
     private String recipient;
-    private ArrayList<Long> delayTimes;
-    private Long avgDelay;
+    private ArrayList<Double> delayTimes;
+    private Double avgDelay;
     private int numMsgs;
 
-    public MDelayTimes(String sender, String recipient,  ArrayList<Long> delayTimes, Long avgDelay, int numMsgs) {
+    public MDelayTimes(String sender, String recipient,  ArrayList<Double> delayTimes, Double avgDelay, int numMsgs) {
         super();
         this.sender = sender;
         this.recipient = recipient;
@@ -42,7 +42,7 @@ public class MDelayTimes extends Message {
      * Gets the list of delay times for each of the messages sent in research mode
      * @return Array list of delay times
      */
-    public ArrayList<Long> getDelayTimes() {
+    public ArrayList<Double> getDelayTimes() {
         return delayTimes;
     }
 
@@ -50,7 +50,7 @@ public class MDelayTimes extends Message {
      * Gets the average delay time of the messages
      * @return average delay time
      */
-    public Long getAvgDelay() {
+    public Double getAvgDelay() {
         return avgDelay;
     }
 

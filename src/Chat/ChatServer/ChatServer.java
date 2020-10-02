@@ -119,8 +119,9 @@ public class ChatServer implements Runnable {
                             }
                             out.print(((MChat) msg).getSenderUsername() + ",");
                             Duration duration = Duration.between(LocalDateTime.now(), msg.getTimeStamp());
+                            long secondsDelay = Math.abs(duration.getSeconds());
                             long delay = Math.abs(duration.getNano());
-                            out.println(delay);
+                            out.println(secondsDelay + (delay/(0.1e10)));
                         }
                         catch (IOException e) {
                             System.err.println(e);
@@ -168,8 +169,8 @@ public class ChatServer implements Runnable {
                             out.println("Average");
                         }
                         out.print(((MDelayTimes) msg).getRecipient() + ",");
-                        for (Long t : ((MDelayTimes) msg).getDelayTimes()) {
-                            out.print(Long.toString(t) + ",");
+                        for (Double t : ((MDelayTimes) msg).getDelayTimes()) {
+                            out.print(t + ",");
                         }
                         out.println(((MDelayTimes) msg).getAvgDelay());
                     }
