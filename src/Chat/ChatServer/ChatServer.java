@@ -1,6 +1,5 @@
 package Chat.ChatServer;
 
-import Chat.ChatClient.ChatClient;
 import Chat.Messages.*;
 
 import java.io.BufferedWriter;
@@ -8,14 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.stream.IntStream;
 
 /**
  * This class is a simple server class it brokers clients connections  and then forwards messages to them
@@ -86,7 +81,9 @@ public class ChatServer implements Runnable {
                         //place it into the clients with correct key
                         clients.put(clientMsg.getUserName(), clientConnection);
                         countClients++;
-                        System.out.println("Client Count is at " +countClients);
+                        if(researchMode) {
+                            System.out.println("Client Count is at " +countClients);
+                        }
 
                         // For research mode: check if total number of clients needed is reached
 
@@ -94,7 +91,6 @@ public class ChatServer implements Runnable {
                             int numSendingClients = totalNumClients/2;
                             for(int i = 1; i <= numSendingClients; i++) {
                                 String sendingClient = "client" + Integer.toString(i);
-
                                 ClientConnection cc = clients.get(sendingClient);
                                 System.out.println("can I send you a message? this client is: " + cc);
                                 if(cc == null){
@@ -109,6 +105,7 @@ public class ChatServer implements Runnable {
                 }
                 else if (msg instanceof MChat) {
                     String recipient = ((MChat) msg).getRecipientUsername();
+                    // In research mode, record times it took for server to receive chat messages from senders
                     if(researchMode) {
                         try (FileWriter fw = new FileWriter(logFileNameServer, true);
                              BufferedWriter bw = new BufferedWriter(fw);
@@ -118,9 +115,8 @@ public class ChatServer implements Runnable {
                                 out.println("Sender,Time");
                             }
                             out.print(((MChat) msg).getSenderUsername() + ",");
-                            //Duration duration = Duration.between(LocalDateTime.now(), msg.getTimeStamp());
                             Duration duration = Duration.between(msg.getTimeStamp(), LocalDateTime.now());
-                            System.out.println("msg time: " + ((MChat) msg).getChatMessage());
+                            System.out.println("msg time: " + msg.getTimeStamp());
                             System.out.println("local time: " + LocalDateTime.now());
                             long secondsDelay = Math.abs(duration.getSeconds());
                             long delay = Math.abs(duration.getNano());
@@ -161,6 +157,7 @@ public class ChatServer implements Runnable {
                     }
                 }
                 else if(msg instanceof MDelayTimes) {
+                    // Write results of delay times to a csv file
                     try (FileWriter fw = new FileWriter(logFileName, true);
                          BufferedWriter bw = new BufferedWriter(fw);
                          PrintWriter out = new PrintWriter(bw);) {
@@ -193,18 +190,13 @@ public class ChatServer implements Runnable {
                 else{
                     System.out.println("message failed to process. " + msg);
                 }
-
-
-
         }
         catch (Exception e)
         {
             System.out.println("catching error in processing messages in ChatServer Run");
             e.printStackTrace();
         }
-
         }
-
     }
 
     /**

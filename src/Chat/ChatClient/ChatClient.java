@@ -33,6 +33,7 @@ public class ChatClient implements Runnable{
     // doesnt matter which class is running on the other end.
     private PriorityBlockingQueue<Message> interfaceMessageQ;
 
+    // used for research mode
     private String recipient;
     private boolean researchMode = false;
     private int numChatMsgs = 0;
@@ -129,7 +130,6 @@ public class ChatClient implements Runnable{
         }
         else if (m instanceof MUnavailable) {
             String recipient = ((MUnavailable) m).getRecipient();
-            System.out.println(recipient + " is unavailable");
             interfaceMessageQ.put(m);
         }
         else if(m instanceof MUsernameExists) {
@@ -169,11 +169,12 @@ public class ChatClient implements Runnable{
      */
     private void forwardMessage(MChat m) {
         String recipient = m.getRecipientUsername();
-        System.out.println("the RECIPIENT from the MChat message  IS " + recipient);
+        if(researchMode) {
+            System.out.println("the RECIPIENT from the MChat message  IS " + recipient);
+        }
         if(recipient.equalsIgnoreCase(username)) {
             // in research mode record the time it took for the message to arrive
             if(researchMode) {
-                //Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
                 Duration duration = Duration.between(m.getTimeStamp(), LocalDateTime.now());
                 System.out.println("msg time: " + m.getTimeStamp());
                 System.out.println("local time: " + LocalDateTime.now());
@@ -181,11 +182,7 @@ public class ChatClient implements Runnable{
                 long delay = Math.abs(duration.getNano());
                 delayTimes.add(String.valueOf(secondsDelay + (delay/(0.1e10))));
                 if(delayTimes.size() == numChatMsgs) {
-//                    double total = 0;
-//                    for(Double i : delayTimes) {
-//                        total += i;
-//                    }
-//                    double avgDelay = total/numChatMsgs;
+                    // Averages can be calculated later
                     MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(),
                                         delayTimes, "0", numChatMsgs);
                     if(serverConnection != null) {
@@ -237,14 +234,11 @@ public class ChatClient implements Runnable{
         try {
             Socket socket = new Socket(serverHostName, serverPort);
             this.messageQ = new PriorityBlockingQueue<Message>();
-            System.out.println("socket is connected?" + socket.isConnected());
             serverConnection = new ServerConnection(socket, messageQ);
             new Thread(serverConnection).start();
         }
         catch (Exception e) {
-//            e.printStackTrace();
             System.out.println("error connecting to server");
-//            System.err.println(e);
         }
     }
 

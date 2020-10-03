@@ -26,14 +26,12 @@ public class ClientConnection implements Runnable{
     private ObjectOutputStream out;
     //the server messageq
     private PriorityBlockingQueue<Message> serverMessageQ;
-   // private ConcurrentHashMap<String,ClientConnection> clients;
     private boolean serverConnected=false;
 
 
     public ClientConnection(String username,Socket socket, PriorityBlockingQueue<Message> serverMessageQ)throws IOException {
         this.socket=socket;
         this.serverMessageQ=serverMessageQ;
-        //this.clients=clients;
         this.username=username;
         out = new ObjectOutputStream(socket.getOutputStream()); // Server to client
         in = new ObjectInputStream(socket.getInputStream()); // From client to server
@@ -55,7 +53,6 @@ public class ClientConnection implements Runnable{
      */
     @Override
     public void run() {
-        //System.out.println("clientconnection " + username + " running");
         Message receivedMessage;
         while(serverConnected) {
             try {
@@ -65,7 +62,6 @@ public class ClientConnection implements Runnable{
                     if (receivedMessage instanceof ClientUserName) {
                         ((ClientUserName) receivedMessage).setTempUserName(this.username);
                         this.setUsername(((ClientUserName) receivedMessage).getUserName());
-                        //System.out.println(((ClientUserName) receivedMessage).getUserName());
                         serverMessageQ.put((receivedMessage));
                     }
                     else if(receivedMessage instanceof MShutDown){
@@ -134,7 +130,6 @@ public class ClientConnection implements Runnable{
      * @throws IOException
      */
     public void shutdown() throws IOException {
-        //System.out.println("Connection to chat server is shut down");
         try {
             out.close();
             in.close();

@@ -206,11 +206,11 @@ public class ChatClientCLI implements Runnable{
                         System.out.println("cant process " + line);
                     }
                 }
+                //if there is no command then create an MCHAT
                 else{
                     MChat mchat = new MChat(username,recipient,line);
                     interfaceMessageQ.put(mchat);
                 }
-                //if there is no command then create an MCHAT
             }
 
             System.out.println("Leaving the Commander!");

@@ -40,7 +40,7 @@ public class ClientLoginController {
 
     @FXML
     public void initialize() {
-        System.out.println("second");
+        //System.out.println("second");
     }
 
     /**
@@ -51,13 +51,13 @@ public class ClientLoginController {
      */
 
     public void loginButtonClicked() throws IOException {
-        System.out.println("Clicked");
+        //System.out.println("Clicked");
         try {
             this.stringPort = port.getText();
             this.interfaceMessageQ = new PriorityBlockingQueue<>();
             this.clientUsername = username.getText();
             client = new ChatClient(clientUsername,serverIP.getText(),Integer.parseInt(stringPort),interfaceMessageQ);
-            System.out.println(username.getText());
+            //System.out.println(username.getText());
             Stage stage;
             stage = (Stage) serverIP.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("chatRoom.fxml"));
