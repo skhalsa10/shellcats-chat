@@ -7,6 +7,8 @@ Siri Khalsa, Lawrence Leung, Michelle Louie, Soheila Jafari Khouzani
 
 ### Usage
 **JRE 10.0.2 MUST BE USED**
+Zip files for this can be found in the "jre_downloads" folder -- Windows and Linux 
+versions are included.
 
 There are 3 jar files in the repo under the folder "jars":
 1. ChatCLI.jar -- used for research purposes
@@ -23,6 +25,7 @@ There are 3 jar files in the repo under the folder "jars":
 `java -jar ChatGUI.jar`
 
 1. In the GUI, type in a username, the server hostname, and the server port. 
+Press `Enter` or click on the `Log In` button.
 - **Note:** If the client cannot connect to the specified server, the client will close down.
 - **Note:** If the input username already exists, the client will also exit.
 2. Specify the recipient at the top by typing the recipient's username.
