@@ -19,5 +19,5 @@ for (( i=1; i<=$((clients/2)); i++ ))
         ##73.42.106.175
         ##73.26.145.62 lawrence
         ##/usr/bin/java -jar $ChatCLI client${i} localhost 8558 research client$((clients -(2-1)))&
-        ${path} -jar $ChatCLI client${i} 73.26.145.62 8558 research client$((clients -(${i}-1))) ${messages}&
+        ${path} -jar $ChatCLI client${i} europa 8558 research client$((clients -(${i}-1))) ${messages}&
 done
