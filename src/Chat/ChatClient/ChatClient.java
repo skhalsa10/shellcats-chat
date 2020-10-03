@@ -175,6 +175,8 @@ public class ChatClient implements Runnable{
             if(researchMode) {
                 //Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
                 Duration duration = Duration.between(m.getTimeStamp(), LocalDateTime.now());
+                System.out.println("msg time: " + m.getTimeStamp());
+                System.out.println("local time: " + LocalDateTime.now());
                 long secondsDelay = Math.abs(duration.getSeconds());
                 long delay = Math.abs(duration.getNano());
                 delayTimes.add(String.valueOf(secondsDelay + (delay/(0.1e10))));
