@@ -118,7 +118,8 @@ public class ChatServer implements Runnable {
                                 out.println("Sender,Time");
                             }
                             out.print(((MChat) msg).getSenderUsername() + ",");
-                            Duration duration = Duration.between(LocalDateTime.now(), msg.getTimeStamp());
+                            //Duration duration = Duration.between(LocalDateTime.now(), msg.getTimeStamp());
+                            Duration duration = Duration.between(msg.getTimeStamp(), LocalDateTime.now());
                             long secondsDelay = Math.abs(duration.getSeconds());
                             long delay = Math.abs(duration.getNano());
                             double total = secondsDelay + (delay/(0.1e10));
