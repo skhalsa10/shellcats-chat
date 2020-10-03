@@ -169,7 +169,7 @@ public class ChatServer implements Runnable {
                             out.println("Average");
                         }
                         out.print(((MDelayTimes) msg).getRecipient() + ",");
-                        for (Double t : ((MDelayTimes) msg).getDelayTimes()) {
+                        for (String t : ((MDelayTimes) msg).getDelayTimes()) {
                             out.print(t + ",");
                         }
                         out.println(((MDelayTimes) msg).getAvgDelay());

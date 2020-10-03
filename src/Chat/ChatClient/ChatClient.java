@@ -36,7 +36,7 @@ public class ChatClient implements Runnable{
     private String recipient;
     private boolean researchMode = false;
     private int numChatMsgs = 0;
-    private ArrayList<Double> delayTimes = new ArrayList<>() ;
+    private ArrayList<String> delayTimes = new ArrayList<>() ;
 
 
     /**
@@ -176,15 +176,15 @@ public class ChatClient implements Runnable{
                 Duration duration = Duration.between(LocalDateTime.now(), m.getTimeStamp());
                 long secondsDelay = Math.abs(duration.getSeconds());
                 long delay = Math.abs(duration.getNano());
-                delayTimes.add(secondsDelay + (delay/(0.1e10)));
+                delayTimes.add(String.valueOf(secondsDelay + (delay/(0.1e10))));
                 if(delayTimes.size() == numChatMsgs) {
-                    double total = 0;
-                    for(Double i : delayTimes) {
-                        total += i;
-                    }
-                    double avgDelay = total/numChatMsgs;
+//                    double total = 0;
+//                    for(Double i : delayTimes) {
+//                        total += i;
+//                    }
+//                    double avgDelay = total/numChatMsgs;
                     MDelayTimes msg = new MDelayTimes(m.getSenderUsername(), m.getRecipientUsername(),
-                                        delayTimes, avgDelay, numChatMsgs);
+                                        delayTimes, "0", numChatMsgs);
                     if(serverConnection != null) {
                         serverConnection.sendMessage(msg);
                     }
