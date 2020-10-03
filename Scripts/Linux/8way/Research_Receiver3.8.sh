@@ -23,5 +23,5 @@ for (( i=1; i<=$((clients/8)); i++ ))
         ##/usr/bin/java -jar $ChatCLI client${i} localhost 8558 research client$((clients -(2-1)))&
         index=$((${i}+${addto}))
         echo client$((clients -(${index}-1)))
-        ${path} -jar $ChatCLI client$((clients -(${index}-1))) 73.42.106.175 8558 research client${index} ${messages}&
+        ${path} -jar $ChatCLI client$((clients -(${index}-1))) 73.26.145.62 8558 research client${index} ${messages}&
 done
