@@ -50,3 +50,9 @@ For the research portion of this project, we added a research mode to the Server
 - `<num_msgs>` the total number of messages sent from one client to another
 
 **Note:** Linux Bash scripts and Windows Batch scripts were used to automate the process of creating these chat clients.
+These scripts are located in the "Scripts" folder.
+
+## Known Issues and Future Features
+- [ ] **BUG** - Can alter text within chat window (received messages area, "Your username" area)
+- [ ] **FEATURE** - format output in ChatCLI to include user name and time next to the message
+- [ ] **Feature:** GUI Window does not resize dynamically per resolution - 
