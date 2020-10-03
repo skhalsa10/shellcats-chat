@@ -10,6 +10,10 @@ Siri Khalsa, Lawrence Leung, Michelle Louie, Soheila Jafari Khouzani
 Zip files for this can be found in the "jre_downloads" folder -- Windows and Linux 
 versions are included.
 
+The link to download jre 10.0.2 is
+- https://www.oracle.com/java/technologies/java-archive-javase10-downloads.html
+- **Note: **  An account must be created before you can download 
+
 There are 3 jar files in the repo under the folder "jars":
 1. ChatCLI.jar -- used for research purposes
 2. ChatGUI.jar
