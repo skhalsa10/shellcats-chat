@@ -10,10 +10,10 @@ public class MDelayTimes extends Message {
     private String sender;
     private String recipient;
     private ArrayList<Double> delayTimes;
-    private Double avgDelay;
+    private double avgDelay;
     private int numMsgs;
 
-    public MDelayTimes(String sender, String recipient,  ArrayList<Double> delayTimes, Double avgDelay, int numMsgs) {
+    public MDelayTimes(String sender, String recipient,  ArrayList<Double> delayTimes, double avgDelay, int numMsgs) {
         super();
         this.sender = sender;
         this.recipient = recipient;
