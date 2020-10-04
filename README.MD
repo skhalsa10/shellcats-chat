@@ -81,6 +81,8 @@ For the research portion of this project, we added a research mode to the Server
 **Note:** Linux Bash scripts and Windows Batch scripts were used to automate the process of creating these chat clients.
 These scripts are located in the "Scripts" folder.
 
+**Note:** The convention for the name of the clients in research mode must be `client<number>` for it to work properly. 
+
 Here is a step by step explanation of how to run a basic research test with 10 clients using Linux scripts:
 
 1. start server with: java -jar ChatServer.jar localhost 8558 research 10 c2c10.csv c2s10.csv
@@ -96,3 +98,5 @@ Here is a step by step explanation of how to run a basic research test with 10 c
 - [ ] **FEATURE** - format output in ChatCLI to include user name and time next to the message
 - [ ] **Feature:** GUI Window does not resize dynamically per resolution  
 - [ ] **BUG** - When using the ChatCLI.jar and a recipient is never set it references a null username and thows an error.
+- [ ] **BUG** - When using the ChatCLI.jar with Windows, the colors for the different commands/text don't come out so messages in the
+terminal have random characters before and after them.
