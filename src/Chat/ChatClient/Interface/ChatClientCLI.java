@@ -22,19 +22,9 @@ public class ChatClientCLI implements Runnable{
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
 
-    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
-    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
-    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
-    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
-    public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
-    public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
-    public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
 
@@ -79,15 +69,12 @@ public class ChatClientCLI implements Runnable{
         this.username = username;
         interfaceMessageQ = new PriorityBlockingQueue<>();
         interfaceMessageQ.put(new MSetRecipient(this.recipient));
+        this.commander = new CLICommander();
         this.chatCLient = new ChatClient(username,serverHostName,serverPort,interfaceMessageQ);
         new Thread(this).start();
         isRunning = true;
-        if(!researchMode) {
-            this.commander = new CLICommander();
-        }
-        else {
-            System.out.println("the commander did not start");
-        }
+
+
     }
 
     /**
@@ -100,7 +87,6 @@ public class ChatClientCLI implements Runnable{
                 Message m = interfaceMessageQ.take();
                 if(m instanceof MSetRecipient){
                     this.recipient = ((MSetRecipient) m).getRecipient();
-                    System.out.println("is the chatclient null? " + chatCLient);
                     chatCLient.sendMessage(m);
                     System.out.println(ANSI_GREEN + "PROCESSED COMMAND:setRecipient " + ANSI_RESET);
                 }else if(m instanceof MChat){
@@ -118,6 +104,10 @@ public class ChatClientCLI implements Runnable{
                     MShutDown m2 = (MShutDown)m;
                     System.out.println(ANSI_RED + "PROCESSED COMMAND:logOff " + ANSI_RESET);
                     isRunning = false;
+                    System.out.println(commander);
+                    if(commander != null){
+                        commander.shutdown();
+                    }
                     chatCLient.sendMessage(m2);
                 }
                 else if(m instanceof MUnavailable){
@@ -125,6 +115,9 @@ public class ChatClientCLI implements Runnable{
                 }
                 else if(m instanceof MStopResearch) {
                     interfaceMessageQ.put(new MShutDown(username));
+                }
+                else if (m instanceof MUsernameExists){
+                    System.out.println("This username is taken. Please try again!");
                 }
                 else{
                     System.out.println("do not know how to process message inside of chatclientclie: " + m);
@@ -138,7 +131,6 @@ public class ChatClientCLI implements Runnable{
             }
         }
         System.out.println("CLI is shutting down");
-
     }
 
     /**
@@ -184,6 +176,10 @@ public class ChatClientCLI implements Runnable{
             CLICommanderRunning = true;
         }
 
+        public void shutdown(){
+            CLICommanderRunning = false;
+        }
+
         /**
          * this thread will take in a line from standard in. if it is a command it
          * processes the command if it is nto a command it will send a message with the text.
@@ -199,8 +195,13 @@ public class ChatClientCLI implements Runnable{
                         interfaceMessageQ.put(new MSetRecipient(parsedCommand[1]));
                     }else if(parsedCommand[0].equals("COMMAND:logOff")){
                         interfaceMessageQ.put(new MShutDown(username));
-                        scanner.close();
-                        CLICommanderRunning = false;
+//                        scanner.close();
+//                        CLICommanderRunning = false;
+                    }else if(parsedCommand[0].equals("COMMAND:help")){
+                        System.out.println("The CLI chat client has some commmands that can be used to control it:\n\n" +
+                                "COMMAND:setRecipient [recipientusername]\n" +
+                                "COMMAND:logOff\n" +
+                                "COMMAND:help");
                     }
                     else{
                         System.out.println("cant process " + line);
@@ -212,14 +213,21 @@ public class ChatClientCLI implements Runnable{
                     interfaceMessageQ.put(mchat);
                 }
             }
-
+            scanner.close();
             System.out.println("Leaving the Commander!");
+
         }
 
     }
 
     private static void PrintInstructions() {
-        System.out.println("Learn how to use this :)");
+
+        System.out.println("Although the ChatClientCLI is meant to be used in research mode. \n" +
+                "It can be used as a regular client\n\n" +
+                "REGULAR Mode instructions:\n" +
+                "java -jar ChatCLI.jar <username> <server hostname> <server port>\n\n" +
+                "RESEARCH MODE:\n" +
+                "java -jar ChatCLI.jar <username> <server hostname> <server port> research <recipient> <num_msgs>");
     }
 
 }

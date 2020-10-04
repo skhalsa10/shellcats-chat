@@ -243,31 +243,21 @@ public class ChatServer implements Runnable {
                     "~/java -jar ChatServer.jar [Server IP or hostname] [port number]\n" +
                     "\n" +
                     "RESEARCH mode instructions1: \n" +
-                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] [research] [total clients needed]\n\n" +
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] research [total clients needed]\n\n" +
                     "RESEARCH mode instructions2: \n" +
-                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] [research] [total clients needed] [RTT(name).csv] [SenderToReceiver(name).csv] ");
+                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] research [total clients needed] [RTT(name).csv] [SenderToReceiver(name).csv] ");
             return;
         }
         ChatServer chatServer=new ChatServer(args[0], Integer.parseInt(args[1]));
         if(args.length >= 4 && args[2].equalsIgnoreCase("research")) {
             chatServer.researchMode = true;
             chatServer.totalNumClients = Integer.parseInt(args[3]);
-            System.out.println(chatServer.researchMode);
-            System.out.println(chatServer.totalNumClients);
+            System.out.println("Server is running in research mode");
+            System.out.println("Research mode is expecting " + chatServer.totalNumClients + " clients to connect");
             if(args.length == 6) {
                 chatServer.logFileName = args[4];
                 chatServer.logFileNameServer = args[5];
             }
-        }
-        else {
-            System.out.println("Instructions:\n" +
-                    "We can run the server in two seperate modes. Regular and Research. \n" +
-                    "REGULAR mode instructions:\n" +
-                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number]\n" +
-                    "\n" +
-                    "RESEARCH mode instructions: \n" +
-                    "~/java -jar ChatServer.jar [Server IP or hostname] [port number] [research] [total clients needed]");
-            return;
         }
 
     }
