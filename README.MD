@@ -95,3 +95,4 @@ Here is a step by step explanation of how to run a basic research test with 10 c
 - [ ] **BUG** - Can alter text within chat window (received messages area, "Your username" area)
 - [ ] **FEATURE** - format output in ChatCLI to include user name and time next to the message
 - [ ] **Feature:** GUI Window does not resize dynamically per resolution - 
+- [ ] **BUG** - When using the ChatCLI.jar and a recipient is never set it references a null username and thows an error.
