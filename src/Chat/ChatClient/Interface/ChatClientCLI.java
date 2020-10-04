@@ -192,7 +192,12 @@ public class ChatClientCLI implements Runnable{
                     String[] parsedCommand = line.split(" ");
                     //process commands
                     if(parsedCommand[0].equals("COMMAND:setRecipient")){
-                        interfaceMessageQ.put(new MSetRecipient(parsedCommand[1]));
+                        if(parsedCommand.length == 2) {
+                            interfaceMessageQ.put(new MSetRecipient(parsedCommand[1]));
+                        } else {
+                            System.out.println("command entered incorrectly\n\n" +
+                                    "COMMAND:setRecipient [recipientusername]\n");
+                        }
                     }else if(parsedCommand[0].equals("COMMAND:logOff")){
                         interfaceMessageQ.put(new MShutDown(username));
 //                        scanner.close();
@@ -209,8 +214,12 @@ public class ChatClientCLI implements Runnable{
                 }
                 //if there is no command then create an MCHAT
                 else{
-                    MChat mchat = new MChat(username,recipient,line);
-                    interfaceMessageQ.put(mchat);
+                    if(recipient != null) {
+                        MChat mchat = new MChat(username, recipient, line);
+                        interfaceMessageQ.put(mchat);
+                    }else{
+                        System.out.println("please set recipient first");
+                    }
                 }
             }
             scanner.close();
